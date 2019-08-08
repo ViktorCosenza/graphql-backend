@@ -1,0 +1,15 @@
+type Trade {
+  id: ID!
+  user: User!
+  skill: Skill!
+  other: Trade!
+  scheduledFor: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+input TradeInput {
+  id: ID
+  username: String
+  skill: String  
+}

@@ -1,11 +1,13 @@
-# import Rating from "Rating.gql"
-
 type User {
   id: ID!
   name: String!
   email: String!
   ratedIn: [Rating!]!
   authorOf: [Rating!]!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Query {
+  user(id: ID!): User
 }

@@ -1,0 +1,18 @@
+type SkillType {
+  id: ID!
+  description: String!
+  contains: [Skill!]!
+}
+
+type Skill {
+  id: ID!
+  description: String!
+  type: SkillType!
+  tradedIn: [Trade!]!
+  createdAt: String!
+}
+
+type Query {
+  skill(description: String!, skip: Int, first: Int): [Skill!]!
+  skillType(id: ID!): SkillType
+}

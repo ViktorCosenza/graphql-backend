@@ -1,0 +1,12 @@
+type Rating {
+  id: ID!
+  author: User!
+  subject: User!
+  skill: Skill!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Mutation {
+  rate(trade: TradeInput!, rating: Int): Rating!
+}
