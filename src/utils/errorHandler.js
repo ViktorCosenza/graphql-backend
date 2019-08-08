@@ -3,3 +3,9 @@ export const UnauthorizedError = message => {
   error.message = message || 'Unauthorized'
   return error
 }
+
+export const BadCredentials = message => {
+  const error = new Error()
+  error.message = message || 'Bad Credentials'
+  return error
+}

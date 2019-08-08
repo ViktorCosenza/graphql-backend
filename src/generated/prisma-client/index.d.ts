@@ -992,6 +992,7 @@ export interface RatingUpsertWithWhereUniqueWithoutAuthorInput {
 export type UserWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
   name?: Maybe<String>;
+  email?: Maybe<String>;
 }>;
 
 export interface RatingScalarWhereInput {

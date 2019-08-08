@@ -4,6 +4,7 @@ import { prisma } from './generated/prisma-client'
 import { yupMiddleware } from 'graphql-yup-middleware'
 
 import Query from './resolvers/Query'
+import Mutation from './resolvers/Mutation'
 import Rating from './resolvers/Rating'
 import Skill from './resolvers/Skill'
 import SkillType from './resolvers/SkillType'
@@ -14,6 +15,7 @@ import typeDefs from './graphql/typeDefs'
 
 const resolvers = {
   Query,
+  Mutation,
   Rating,
   Skill,
   SkillType,
