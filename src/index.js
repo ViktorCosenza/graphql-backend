@@ -1,5 +1,8 @@
 import { GraphQLServer } from 'graphql-yoga'
 import { prisma } from './generated/prisma-client'
+
+import { yupMiddleware } from 'graphql-yup-middleware'
+
 import Query from './resolvers/Query'
 import Rating from './resolvers/Rating'
 import Skill from './resolvers/Skill'
@@ -19,12 +22,13 @@ const resolvers = {
 }
 
 const server = new GraphQLServer({
-  typeDefs,
+  typeDefs: typeDefs,
   resolvers,
   context: ctx => ({
     ...ctx,
     prisma
-  })
+  }),
+  middlewares: [yupMiddleware()]
 })
 
 export default server
