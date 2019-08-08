@@ -1,0 +1,10 @@
+endpoint: https://eu1.prisma.sh/victor-cosenza-b8ed0c/graphql-backend/dev
+datamodel:
+  - User.prisma
+  - Skill.prisma
+  - Trade.prisma
+  - Rating.prisma
+
+generate:
+  - generator: javascript-client
+    output: ../src/generated/prisma-client/

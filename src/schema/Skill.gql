@@ -1,0 +1,15 @@
+# import Trade from "Trade.gql"
+
+type SkillType {
+    id: !ID
+    description: String!
+    contains: [Skill!]!
+}
+
+type Skill {
+    id: ID!
+    description: String!
+    type: SkillType!
+    tradedIn: [Trade!]!
+    createdAt: DateTime!
+}

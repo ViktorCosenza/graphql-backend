@@ -1,0 +1,17 @@
+type SkillType {
+  id: ID! @id
+  description: String!
+  contains: [Skill!]!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type Skill {
+  id: ID! @id
+  description: String!
+  type: SkillType! 
+  tradedIn: [Trade!]!
+  ratedIn: [Skill!]!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}

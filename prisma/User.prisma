@@ -1,0 +1,10 @@
+type User {
+  id: ID! @id
+  name: String! @unique
+  email: String! @required
+  password: String!
+  ratedIn: [Rating!]! @relation(name: "RatingSubject")
+  authorOf: [Rating!]! @relation(name: "RatingAuthor")
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}

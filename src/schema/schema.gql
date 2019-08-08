@@ -1,0 +1,20 @@
+# import Rating from "Rating.gql"
+# import User from "User.gql"
+# import Skill from "Skill.gql"
+# import SkillType from "Skill.gql"
+# import Trade from "Trade.gql"
+# import AuthPayload from "AuthPayload.gql"
+
+type Query {
+    info: String!
+    skill: (id: ID, skip: Int, first: Int): [Skill!]!
+    user: (id: ID!): User
+    skillType: (id: ID!): SkillType
+    tradeSearch: (description: String!): [User!]!
+}
+
+type Mutation {
+    signup(email: String!, password: String!, name: String!): AuthPayload
+    login(email: String!, password: String!): AuthPayload
+    rate(trade: Trade!, rating: Int): Rating!
+}

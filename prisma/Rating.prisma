@@ -1,0 +1,8 @@
+type Rating {
+  id: ID! @id
+  author: User! @relation(name: "RatingAuthor")
+  subject: User! @relation(name: "RatingSubject")
+  skill: Skill!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
