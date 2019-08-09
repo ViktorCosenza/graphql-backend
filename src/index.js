@@ -2,6 +2,8 @@ import { GraphQLServer } from 'graphql-yoga'
 import { prisma } from './generated/prisma-client'
 
 import { yupMiddleware } from 'graphql-yup-middleware'
+import sentryMiddleware from './middleware/Sentry'
+import shieldMiddleware from './middleware/Shield'
 
 import Query from './resolvers/Query'
 import Mutation from './resolvers/Mutation'
@@ -30,7 +32,7 @@ const server = new GraphQLServer({
     ...ctx,
     prisma
   }),
-  middlewares: [yupMiddleware()]
+  middlewares: [sentryMiddleware, shieldMiddleware, yupMiddleware()]
 })
 
 export default server

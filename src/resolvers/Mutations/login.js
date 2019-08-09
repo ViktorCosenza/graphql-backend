@@ -5,23 +5,22 @@ import * as Yup from 'yup'
 
 const login = {
   validationSchema: Yup.object().shape({
-    name: Yup.string()
-      .strict(true)
-      .trim()
-      .max(32),
-    email: Yup.string()
-      .email(),
-    password: Yup.string()
-      .strict()
-      .trim()
-      .min(4)
-      .max(32)
+    input: Yup.object().shape({
+      email: Yup.string()
+        .email(),
+      password: Yup.string()
+        .strict()
+        .trim()
+        .min(4)
+        .max(32)
+    })
   }),
   resolve: async (root, args, ctx, info) => {
-    const user = await ctx.prisma.user({ email: args.email })
+    const { input } = args
+    const user = await ctx.prisma.user({ email: input.email })
     if (!user) throw new Error('User not Found')
 
-    const valid = await bcrypt.compare(args.password, user.password)
+    const valid = await bcrypt.compare(input.password, user.password)
     if (!valid) throw new Error('Wrong Password')
 
     const token = jwt.sign({ userId: user.id }, APP_SECRET)
