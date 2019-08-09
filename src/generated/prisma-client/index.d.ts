@@ -264,6 +264,8 @@ export type RatingOrderByInput =
 export type SkillOrderByInput =
   | "id_ASC"
   | "id_DESC"
+  | "name_ASC"
+  | "name_DESC"
   | "description_ASC"
   | "description_DESC"
   | "createdAt_ASC"
@@ -284,6 +286,8 @@ export type TradeOrderByInput =
 export type SkillTypeOrderByInput =
   | "id_ASC"
   | "id_DESC"
+  | "name_ASC"
+  | "name_DESC"
   | "description_ASC"
   | "description_DESC"
   | "createdAt_ASC"
@@ -338,6 +342,20 @@ export interface SkillWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
   description?: Maybe<String>;
   description_not?: Maybe<String>;
   description_in?: Maybe<String[] | String>;
@@ -580,6 +598,7 @@ export interface TradeSubscriptionWhereInput {
 
 export interface SkillCreateWithoutTradedInInput {
   id?: Maybe<ID_Input>;
+  name: String;
   description: String;
   type: SkillTypeCreateOneWithoutContainsInput;
   ratedIn?: Maybe<SkillCreateManyInput>;
@@ -662,6 +681,7 @@ export interface RatingUpdateManyWithoutSubjectInput {
 }
 
 export interface SkillUpdateWithoutTypeDataInput {
+  name?: Maybe<String>;
   description?: Maybe<String>;
   tradedIn?: Maybe<TradeUpdateManyWithoutSkillInput>;
   ratedIn?: Maybe<SkillUpdateManyInput>;
@@ -698,6 +718,7 @@ export interface RatingUpdateWithoutSubjectDataInput {
 }
 
 export interface SkillTypeUpdateInput {
+  name?: Maybe<String>;
   description?: Maybe<String>;
   contains?: Maybe<SkillUpdateManyWithoutTypeInput>;
 }
@@ -714,6 +735,7 @@ export interface SkillCreateManyWithoutTypeInput {
 }
 
 export interface SkillUpdateDataInput {
+  name?: Maybe<String>;
   description?: Maybe<String>;
   type?: Maybe<SkillTypeUpdateOneRequiredWithoutContainsInput>;
   tradedIn?: Maybe<TradeUpdateManyWithoutSkillInput>;
@@ -722,6 +744,7 @@ export interface SkillUpdateDataInput {
 
 export interface SkillTypeCreateInput {
   id?: Maybe<ID_Input>;
+  name: String;
   description: String;
   contains?: Maybe<SkillCreateManyWithoutTypeInput>;
 }
@@ -734,6 +757,7 @@ export interface SkillTypeUpdateOneRequiredWithoutContainsInput {
 }
 
 export interface SkillUpdateInput {
+  name?: Maybe<String>;
   description?: Maybe<String>;
   type?: Maybe<SkillTypeUpdateOneRequiredWithoutContainsInput>;
   tradedIn?: Maybe<TradeUpdateManyWithoutSkillInput>;
@@ -741,6 +765,7 @@ export interface SkillUpdateInput {
 }
 
 export interface SkillTypeUpdateWithoutContainsDataInput {
+  name?: Maybe<String>;
   description?: Maybe<String>;
 }
 
@@ -764,6 +789,20 @@ export interface SkillTypeWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
   description?: Maybe<String>;
   description_not?: Maybe<String>;
   description_in?: Maybe<String[] | String>;
@@ -1060,6 +1099,7 @@ export interface TradeUpdateOneInput {
 
 export interface SkillCreateInput {
   id?: Maybe<ID_Input>;
+  name: String;
   description: String;
   type: SkillTypeCreateOneWithoutContainsInput;
   tradedIn?: Maybe<TradeCreateManyWithoutSkillInput>;
@@ -1094,6 +1134,7 @@ export interface RatingCreateWithoutAuthorInput {
 }
 
 export interface SkillUpdateWithoutTradedInDataInput {
+  name?: Maybe<String>;
   description?: Maybe<String>;
   type?: Maybe<SkillTypeUpdateOneRequiredWithoutContainsInput>;
   ratedIn?: Maybe<SkillUpdateManyInput>;
@@ -1137,6 +1178,7 @@ export interface SkillUpdateManyInput {
 }
 
 export interface SkillTypeUpdateManyMutationInput {
+  name?: Maybe<String>;
   description?: Maybe<String>;
 }
 
@@ -1147,6 +1189,7 @@ export interface SkillUpdateWithWhereUniqueNestedInput {
 
 export interface SkillCreateWithoutTypeInput {
   id?: Maybe<ID_Input>;
+  name: String;
   description: String;
   tradedIn?: Maybe<TradeCreateManyWithoutSkillInput>;
   ratedIn?: Maybe<SkillCreateManyInput>;
@@ -1180,6 +1223,20 @@ export interface SkillScalarWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
   description?: Maybe<String>;
   description_not?: Maybe<String>;
   description_in?: Maybe<String[] | String>;
@@ -1217,6 +1274,7 @@ export interface SkillScalarWhereInput {
 
 export interface SkillTypeCreateWithoutContainsInput {
   id?: Maybe<ID_Input>;
+  name: String;
   description: String;
 }
 
@@ -1237,6 +1295,7 @@ export interface UserSubscriptionWhereInput {
 }
 
 export interface SkillUpdateManyDataInput {
+  name?: Maybe<String>;
   description?: Maybe<String>;
 }
 
@@ -1306,6 +1365,7 @@ export interface SkillUpsertWithoutTradedInInput {
 }
 
 export interface SkillUpdateManyMutationInput {
+  name?: Maybe<String>;
   description?: Maybe<String>;
 }
 
@@ -1390,6 +1450,7 @@ export interface SkillConnectionSubscription
 
 export interface Skill {
   id: ID_Output;
+  name: String;
   description: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
@@ -1397,6 +1458,7 @@ export interface Skill {
 
 export interface SkillPromise extends Promise<Skill>, Fragmentable {
   id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
   description: () => Promise<String>;
   type: <T = SkillTypePromise>() => T;
   tradedIn: <T = FragmentableArray<Trade>>(args?: {
@@ -1425,6 +1487,7 @@ export interface SkillSubscription
   extends Promise<AsyncIterator<Skill>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   type: <T = SkillTypeSubscription>() => T;
   tradedIn: <T = Promise<AsyncIterator<TradeSubscription>>>(args?: {
@@ -1453,6 +1516,7 @@ export interface SkillNullablePromise
   extends Promise<Skill | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
   description: () => Promise<String>;
   type: <T = SkillTypePromise>() => T;
   tradedIn: <T = FragmentableArray<Trade>>(args?: {
@@ -1822,6 +1886,7 @@ export interface RatingPreviousValuesSubscription
 
 export interface SkillType {
   id: ID_Output;
+  name: String;
   description: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
@@ -1829,6 +1894,7 @@ export interface SkillType {
 
 export interface SkillTypePromise extends Promise<SkillType>, Fragmentable {
   id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
   description: () => Promise<String>;
   contains: <T = FragmentableArray<Skill>>(args?: {
     where?: SkillWhereInput;
@@ -1847,6 +1913,7 @@ export interface SkillTypeSubscription
   extends Promise<AsyncIterator<SkillType>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   contains: <T = Promise<AsyncIterator<SkillSubscription>>>(args?: {
     where?: SkillWhereInput;
@@ -1865,6 +1932,7 @@ export interface SkillTypeNullablePromise
   extends Promise<SkillType | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
   description: () => Promise<String>;
   contains: <T = FragmentableArray<Skill>>(args?: {
     where?: SkillWhereInput;
@@ -2055,6 +2123,7 @@ export interface AggregateSkillTypeSubscription
 
 export interface SkillTypePreviousValues {
   id: ID_Output;
+  name: String;
   description: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
@@ -2064,6 +2133,7 @@ export interface SkillTypePreviousValuesPromise
   extends Promise<SkillTypePreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
   description: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -2073,6 +2143,7 @@ export interface SkillTypePreviousValuesSubscription
   extends Promise<AsyncIterator<SkillTypePreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
@@ -2126,6 +2197,7 @@ export interface RatingConnectionSubscription
 
 export interface SkillPreviousValues {
   id: ID_Output;
+  name: String;
   description: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
@@ -2135,6 +2207,7 @@ export interface SkillPreviousValuesPromise
   extends Promise<SkillPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
   description: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -2144,6 +2217,7 @@ export interface SkillPreviousValuesSubscription
   extends Promise<AsyncIterator<SkillPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;

@@ -1,5 +1,6 @@
 type SkillType {
   id: ID! @id
+  name: String!
   description: String!
   contains: [Skill!]!
   createdAt: DateTime! @createdAt
@@ -8,6 +9,7 @@ type SkillType {
 
 type Skill {
   id: ID! @id
+  name: String!
   description: String!
   type: SkillType! 
   tradedIn: [Trade!]!

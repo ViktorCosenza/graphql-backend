@@ -1,11 +1,13 @@
 type SkillType {
   id: ID!
+  name: String!
   description: String!
   contains: [Skill!]!
 }
 
 type Skill {
   id: ID!
+  name: String!
   description: String!
   type: SkillType!
   tradedIn: [Trade!]!
@@ -13,12 +15,24 @@ type Skill {
 }
 
 input SkillTypeInput {
+  name: String!
   description: String!
 }
 
 input SkillInput {
+  name: String!
   description: String!
   type: ID!
+}
+
+type SkillMutationPayload {
+  error: MutationValidationError
+  data: Skill
+}
+
+type SkillTypeMutationPayload {
+  error: MutationValidationError
+  data: SkillType
 }
 
 type Query {
@@ -27,6 +41,6 @@ type Query {
 }
 
 type Mutation {
-  createSkillType(input: SkillTypeInput!): SkillType!
-  createSkill(input: SkillInput!): Skill!
+  createSkillType(input: SkillTypeInput!): SkillTypeMutationPayload
+  createSkill(input: SkillInput!): SkillMutationPayload
 }

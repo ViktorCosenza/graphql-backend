@@ -322,6 +322,7 @@ input RatingWhereUniqueInput {
 
 type Skill {
   id: ID!
+  name: String!
   description: String!
   type: SkillType!
   tradedIn(where: TradeWhereInput, orderBy: TradeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Trade!]
@@ -338,6 +339,7 @@ type SkillConnection {
 
 input SkillCreateInput {
   id: ID
+  name: String!
   description: String!
   type: SkillTypeCreateOneWithoutContainsInput!
   tradedIn: TradeCreateManyWithoutSkillInput
@@ -366,6 +368,7 @@ input SkillCreateOneWithoutTradedInInput {
 
 input SkillCreateWithoutTradedInInput {
   id: ID
+  name: String!
   description: String!
   type: SkillTypeCreateOneWithoutContainsInput!
   ratedIn: SkillCreateManyInput
@@ -373,6 +376,7 @@ input SkillCreateWithoutTradedInInput {
 
 input SkillCreateWithoutTypeInput {
   id: ID
+  name: String!
   description: String!
   tradedIn: TradeCreateManyWithoutSkillInput
   ratedIn: SkillCreateManyInput
@@ -386,6 +390,8 @@ type SkillEdge {
 enum SkillOrderByInput {
   id_ASC
   id_DESC
+  name_ASC
+  name_DESC
   description_ASC
   description_DESC
   createdAt_ASC
@@ -396,6 +402,7 @@ enum SkillOrderByInput {
 
 type SkillPreviousValues {
   id: ID!
+  name: String!
   description: String!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -416,6 +423,20 @@ input SkillScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
   description: String
   description_not: String
   description_in: [String!]
@@ -471,6 +492,7 @@ input SkillSubscriptionWhereInput {
 
 type SkillType {
   id: ID!
+  name: String!
   description: String!
   contains(where: SkillWhereInput, orderBy: SkillOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Skill!]
   createdAt: DateTime!
@@ -485,6 +507,7 @@ type SkillTypeConnection {
 
 input SkillTypeCreateInput {
   id: ID
+  name: String!
   description: String!
   contains: SkillCreateManyWithoutTypeInput
 }
@@ -496,6 +519,7 @@ input SkillTypeCreateOneWithoutContainsInput {
 
 input SkillTypeCreateWithoutContainsInput {
   id: ID
+  name: String!
   description: String!
 }
 
@@ -507,6 +531,8 @@ type SkillTypeEdge {
 enum SkillTypeOrderByInput {
   id_ASC
   id_DESC
+  name_ASC
+  name_DESC
   description_ASC
   description_DESC
   createdAt_ASC
@@ -517,6 +543,7 @@ enum SkillTypeOrderByInput {
 
 type SkillTypePreviousValues {
   id: ID!
+  name: String!
   description: String!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -541,11 +568,13 @@ input SkillTypeSubscriptionWhereInput {
 }
 
 input SkillTypeUpdateInput {
+  name: String
   description: String
   contains: SkillUpdateManyWithoutTypeInput
 }
 
 input SkillTypeUpdateManyMutationInput {
+  name: String
   description: String
 }
 
@@ -557,6 +586,7 @@ input SkillTypeUpdateOneRequiredWithoutContainsInput {
 }
 
 input SkillTypeUpdateWithoutContainsDataInput {
+  name: String
   description: String
 }
 
@@ -580,6 +610,20 @@ input SkillTypeWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
   description: String
   description_not: String
   description_in: [String!]
@@ -623,6 +667,7 @@ input SkillTypeWhereUniqueInput {
 }
 
 input SkillUpdateDataInput {
+  name: String
   description: String
   type: SkillTypeUpdateOneRequiredWithoutContainsInput
   tradedIn: TradeUpdateManyWithoutSkillInput
@@ -630,6 +675,7 @@ input SkillUpdateDataInput {
 }
 
 input SkillUpdateInput {
+  name: String
   description: String
   type: SkillTypeUpdateOneRequiredWithoutContainsInput
   tradedIn: TradeUpdateManyWithoutSkillInput
@@ -637,6 +683,7 @@ input SkillUpdateInput {
 }
 
 input SkillUpdateManyDataInput {
+  name: String
   description: String
 }
 
@@ -653,6 +700,7 @@ input SkillUpdateManyInput {
 }
 
 input SkillUpdateManyMutationInput {
+  name: String
   description: String
 }
 
@@ -688,12 +736,14 @@ input SkillUpdateOneRequiredWithoutTradedInInput {
 }
 
 input SkillUpdateWithoutTradedInDataInput {
+  name: String
   description: String
   type: SkillTypeUpdateOneRequiredWithoutContainsInput
   ratedIn: SkillUpdateManyInput
 }
 
 input SkillUpdateWithoutTypeDataInput {
+  name: String
   description: String
   tradedIn: TradeUpdateManyWithoutSkillInput
   ratedIn: SkillUpdateManyInput
@@ -746,6 +796,20 @@ input SkillWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
   description: String
   description_not: String
   description_in: [String!]
