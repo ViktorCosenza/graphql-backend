@@ -16,6 +16,7 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 export type Maybe<T> = T | undefined | null;
 
 export interface Exists {
+  offer: (where?: OfferWhereInput) => Promise<boolean>;
   rating: (where?: RatingWhereInput) => Promise<boolean>;
   skill: (where?: SkillWhereInput) => Promise<boolean>;
   skillType: (where?: SkillTypeWhereInput) => Promise<boolean>;
@@ -42,6 +43,25 @@ export interface Prisma {
    * Queries
    */
 
+  offer: (where: OfferWhereUniqueInput) => OfferNullablePromise;
+  offers: (args?: {
+    where?: OfferWhereInput;
+    orderBy?: OfferOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Offer>;
+  offersConnection: (args?: {
+    where?: OfferWhereInput;
+    orderBy?: OfferOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => OfferConnectionPromise;
   rating: (where: RatingWhereUniqueInput) => RatingNullablePromise;
   ratings: (args?: {
     where?: RatingWhereInput;
@@ -143,6 +163,18 @@ export interface Prisma {
    * Mutations
    */
 
+  createOffer: (data: OfferCreateInput) => OfferPromise;
+  updateOffer: (args: {
+    data: OfferUpdateInput;
+    where: OfferWhereUniqueInput;
+  }) => OfferPromise;
+  upsertOffer: (args: {
+    where: OfferWhereUniqueInput;
+    create: OfferCreateInput;
+    update: OfferUpdateInput;
+  }) => OfferPromise;
+  deleteOffer: (where: OfferWhereUniqueInput) => OfferPromise;
+  deleteManyOffers: (where?: OfferWhereInput) => BatchPayloadPromise;
   createRating: (data: RatingCreateInput) => RatingPromise;
   updateRating: (args: {
     data: RatingUpdateInput;
@@ -228,6 +260,9 @@ export interface Prisma {
 }
 
 export interface Subscription {
+  offer: (
+    where?: OfferSubscriptionWhereInput
+  ) => OfferSubscriptionPayloadSubscription;
   rating: (
     where?: RatingSubscriptionWhereInput
   ) => RatingSubscriptionPayloadSubscription;
@@ -252,6 +287,14 @@ export interface ClientConstructor<T> {
 /**
  * Types
  */
+
+export type OfferOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type RatingOrderByInput =
   | "id_ASC"
@@ -311,20 +354,35 @@ export type UserOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export interface SkillUpdateOneRequiredInput {
-  create?: Maybe<SkillCreateInput>;
-  update?: Maybe<SkillUpdateDataInput>;
-  upsert?: Maybe<SkillUpsertNestedInput>;
-  connect?: Maybe<SkillWhereUniqueInput>;
+export interface SkillTypeUpdateOneRequiredWithoutContainsInput {
+  create?: Maybe<SkillTypeCreateWithoutContainsInput>;
+  update?: Maybe<SkillTypeUpdateWithoutContainsDataInput>;
+  upsert?: Maybe<SkillTypeUpsertWithoutContainsInput>;
+  connect?: Maybe<SkillTypeWhereUniqueInput>;
 }
 
-export type RatingWhereUniqueInput = AtLeastOne<{
+export type OfferWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface SkillTypeUpsertWithoutContainsInput {
-  update: SkillTypeUpdateWithoutContainsDataInput;
-  create: SkillTypeCreateWithoutContainsInput;
+export interface TradeUpdateManyWithoutOfferInput {
+  create?: Maybe<TradeCreateWithoutOfferInput[] | TradeCreateWithoutOfferInput>;
+  delete?: Maybe<TradeWhereUniqueInput[] | TradeWhereUniqueInput>;
+  connect?: Maybe<TradeWhereUniqueInput[] | TradeWhereUniqueInput>;
+  set?: Maybe<TradeWhereUniqueInput[] | TradeWhereUniqueInput>;
+  disconnect?: Maybe<TradeWhereUniqueInput[] | TradeWhereUniqueInput>;
+  update?: Maybe<
+    | TradeUpdateWithWhereUniqueWithoutOfferInput[]
+    | TradeUpdateWithWhereUniqueWithoutOfferInput
+  >;
+  upsert?: Maybe<
+    | TradeUpsertWithWhereUniqueWithoutOfferInput[]
+    | TradeUpsertWithWhereUniqueWithoutOfferInput
+  >;
+  deleteMany?: Maybe<TradeScalarWhereInput[] | TradeScalarWhereInput>;
+  updateMany?: Maybe<
+    TradeUpdateManyWithWhereNestedInput[] | TradeUpdateManyWithWhereNestedInput
+  >;
 }
 
 export interface SkillWhereInput {
@@ -371,12 +429,9 @@ export interface SkillWhereInput {
   description_ends_with?: Maybe<String>;
   description_not_ends_with?: Maybe<String>;
   type?: Maybe<SkillTypeWhereInput>;
-  tradedIn_every?: Maybe<TradeWhereInput>;
-  tradedIn_some?: Maybe<TradeWhereInput>;
-  tradedIn_none?: Maybe<TradeWhereInput>;
-  ratedIn_every?: Maybe<SkillWhereInput>;
-  ratedIn_some?: Maybe<SkillWhereInput>;
-  ratedIn_none?: Maybe<SkillWhereInput>;
+  offeredIn_every?: Maybe<OfferWhereInput>;
+  offeredIn_some?: Maybe<OfferWhereInput>;
+  offeredIn_none?: Maybe<OfferWhereInput>;
   createdAt?: Maybe<DateTimeInput>;
   createdAt_not?: Maybe<DateTimeInput>;
   createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -398,24 +453,9 @@ export interface SkillWhereInput {
   NOT?: Maybe<SkillWhereInput[] | SkillWhereInput>;
 }
 
-export interface TradeUpdateManyWithoutSkillInput {
-  create?: Maybe<TradeCreateWithoutSkillInput[] | TradeCreateWithoutSkillInput>;
-  delete?: Maybe<TradeWhereUniqueInput[] | TradeWhereUniqueInput>;
-  connect?: Maybe<TradeWhereUniqueInput[] | TradeWhereUniqueInput>;
-  set?: Maybe<TradeWhereUniqueInput[] | TradeWhereUniqueInput>;
-  disconnect?: Maybe<TradeWhereUniqueInput[] | TradeWhereUniqueInput>;
-  update?: Maybe<
-    | TradeUpdateWithWhereUniqueWithoutSkillInput[]
-    | TradeUpdateWithWhereUniqueWithoutSkillInput
-  >;
-  upsert?: Maybe<
-    | TradeUpsertWithWhereUniqueWithoutSkillInput[]
-    | TradeUpsertWithWhereUniqueWithoutSkillInput
-  >;
-  deleteMany?: Maybe<TradeScalarWhereInput[] | TradeScalarWhereInput>;
-  updateMany?: Maybe<
-    TradeUpdateManyWithWhereNestedInput[] | TradeUpdateManyWithWhereNestedInput
-  >;
+export interface TradeUpdateWithWhereUniqueWithoutOfferInput {
+  where: TradeWhereUniqueInput;
+  data: TradeUpdateWithoutOfferDataInput;
 }
 
 export interface TradeWhereInput {
@@ -433,8 +473,7 @@ export interface TradeWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  user?: Maybe<UserWhereInput>;
-  skill?: Maybe<SkillWhereInput>;
+  offer?: Maybe<OfferWhereInput>;
   other?: Maybe<TradeWhereInput>;
   scheduledFor?: Maybe<DateTimeInput>;
   scheduledFor_not?: Maybe<DateTimeInput>;
@@ -465,35 +504,50 @@ export interface TradeWhereInput {
   NOT?: Maybe<TradeWhereInput[] | TradeWhereInput>;
 }
 
-export interface UserCreateWithoutRatedInInput {
+export interface RatingCreateWithoutSubjectInput {
+  id?: Maybe<ID_Input>;
+  author: UserCreateOneWithoutAuthorOfInput;
+}
+
+export interface OfferCreateManyWithoutSkillInput {
+  create?: Maybe<OfferCreateWithoutSkillInput[] | OfferCreateWithoutSkillInput>;
+  connect?: Maybe<OfferWhereUniqueInput[] | OfferWhereUniqueInput>;
+}
+
+export interface UserCreateOneWithoutAuthorOfInput {
+  create?: Maybe<UserCreateWithoutAuthorOfInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface TradeUpdateWithoutOfferDataInput {
+  other?: Maybe<TradeUpdateOneInput>;
+  scheduledFor?: Maybe<DateTimeInput>;
+}
+
+export interface UserCreateWithoutAuthorOfInput {
   id?: Maybe<ID_Input>;
   name: String;
   email: String;
   password: String;
-  authorOf?: Maybe<RatingCreateManyWithoutAuthorInput>;
+  offers?: Maybe<OfferCreateManyWithoutOfferedByInput>;
 }
 
-export interface TradeUpdateManyWithWhereNestedInput {
-  where: TradeScalarWhereInput;
-  data: TradeUpdateManyDataInput;
+export interface TradeSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<TradeWhereInput>;
+  AND?: Maybe<TradeSubscriptionWhereInput[] | TradeSubscriptionWhereInput>;
+  OR?: Maybe<TradeSubscriptionWhereInput[] | TradeSubscriptionWhereInput>;
+  NOT?: Maybe<TradeSubscriptionWhereInput[] | TradeSubscriptionWhereInput>;
 }
 
-export interface TradeCreateOneInput {
-  create?: Maybe<TradeCreateInput>;
-  connect?: Maybe<TradeWhereUniqueInput>;
-}
-
-export interface TradeUpdateWithWhereUniqueWithoutSkillInput {
-  where: TradeWhereUniqueInput;
-  data: TradeUpdateWithoutSkillDataInput;
-}
-
-export interface TradeCreateInput {
-  id?: Maybe<ID_Input>;
-  user: UserCreateOneInput;
-  skill: SkillCreateOneWithoutTradedInInput;
-  other?: Maybe<TradeCreateOneInput>;
-  scheduledFor?: Maybe<DateTimeInput>;
+export interface OfferCreateManyWithoutOfferedByInput {
+  create?: Maybe<
+    OfferCreateWithoutOfferedByInput[] | OfferCreateWithoutOfferedByInput
+  >;
+  connect?: Maybe<OfferWhereUniqueInput[] | OfferWhereUniqueInput>;
 }
 
 export interface UserWhereInput {
@@ -553,9 +607,9 @@ export interface UserWhereInput {
   password_not_starts_with?: Maybe<String>;
   password_ends_with?: Maybe<String>;
   password_not_ends_with?: Maybe<String>;
-  ratedIn_every?: Maybe<RatingWhereInput>;
-  ratedIn_some?: Maybe<RatingWhereInput>;
-  ratedIn_none?: Maybe<RatingWhereInput>;
+  offers_every?: Maybe<OfferWhereInput>;
+  offers_some?: Maybe<OfferWhereInput>;
+  offers_none?: Maybe<OfferWhereInput>;
   authorOf_every?: Maybe<RatingWhereInput>;
   authorOf_some?: Maybe<RatingWhereInput>;
   authorOf_none?: Maybe<RatingWhereInput>;
@@ -580,28 +634,11 @@ export interface UserWhereInput {
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
-export interface SkillCreateOneWithoutTradedInInput {
-  create?: Maybe<SkillCreateWithoutTradedInInput>;
-  connect?: Maybe<SkillWhereUniqueInput>;
-}
-
-export interface TradeSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<TradeWhereInput>;
-  AND?: Maybe<TradeSubscriptionWhereInput[] | TradeSubscriptionWhereInput>;
-  OR?: Maybe<TradeSubscriptionWhereInput[] | TradeSubscriptionWhereInput>;
-  NOT?: Maybe<TradeSubscriptionWhereInput[] | TradeSubscriptionWhereInput>;
-}
-
-export interface SkillCreateWithoutTradedInInput {
+export interface OfferCreateWithoutOfferedByInput {
   id?: Maybe<ID_Input>;
-  name: String;
-  description: String;
-  type: SkillTypeCreateOneWithoutContainsInput;
-  ratedIn?: Maybe<SkillCreateManyInput>;
+  skill: SkillCreateOneWithoutOfferedInInput;
+  tradedIn?: Maybe<TradeCreateManyWithoutOfferInput>;
+  ratedBy?: Maybe<RatingCreateManyWithoutSubjectInput>;
 }
 
 export interface SkillSubscriptionWhereInput {
@@ -615,81 +652,121 @@ export interface SkillSubscriptionWhereInput {
   NOT?: Maybe<SkillSubscriptionWhereInput[] | SkillSubscriptionWhereInput>;
 }
 
-export interface SkillCreateManyInput {
-  create?: Maybe<SkillCreateInput[] | SkillCreateInput>;
-  connect?: Maybe<SkillWhereUniqueInput[] | SkillWhereUniqueInput>;
+export interface OfferUpdateInput {
+  offeredBy?: Maybe<UserUpdateOneRequiredWithoutOffersInput>;
+  skill?: Maybe<SkillUpdateOneRequiredWithoutOfferedInInput>;
+  tradedIn?: Maybe<TradeUpdateManyWithoutOfferInput>;
+  ratedBy?: Maybe<RatingUpdateManyWithoutSubjectInput>;
 }
 
-export interface UserUpdateManyMutationInput {
-  name?: Maybe<String>;
-  email?: Maybe<String>;
-  password?: Maybe<String>;
+export interface OfferSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<OfferWhereInput>;
+  AND?: Maybe<OfferSubscriptionWhereInput[] | OfferSubscriptionWhereInput>;
+  OR?: Maybe<OfferSubscriptionWhereInput[] | OfferSubscriptionWhereInput>;
+  NOT?: Maybe<OfferSubscriptionWhereInput[] | OfferSubscriptionWhereInput>;
 }
 
-export interface RatingUpdateInput {
-  author?: Maybe<UserUpdateOneRequiredWithoutAuthorOfInput>;
-  subject?: Maybe<UserUpdateOneRequiredWithoutRatedInInput>;
-  skill?: Maybe<SkillUpdateOneRequiredInput>;
-}
-
-export type SkillWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface UserUpdateOneRequiredWithoutAuthorOfInput {
-  create?: Maybe<UserCreateWithoutAuthorOfInput>;
-  update?: Maybe<UserUpdateWithoutAuthorOfDataInput>;
-  upsert?: Maybe<UserUpsertWithoutAuthorOfInput>;
+export interface UserUpdateOneRequiredWithoutOffersInput {
+  create?: Maybe<UserCreateWithoutOffersInput>;
+  update?: Maybe<UserUpdateWithoutOffersDataInput>;
+  upsert?: Maybe<UserUpsertWithoutOffersInput>;
   connect?: Maybe<UserWhereUniqueInput>;
 }
 
-export interface TradeUpdateInput {
-  user?: Maybe<UserUpdateOneRequiredInput>;
-  skill?: Maybe<SkillUpdateOneRequiredWithoutTradedInInput>;
-  other?: Maybe<TradeUpdateOneInput>;
-  scheduledFor?: Maybe<DateTimeInput>;
-}
-
-export interface UserUpdateWithoutAuthorOfDataInput {
+export interface UserUpdateInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
   password?: Maybe<String>;
-  ratedIn?: Maybe<RatingUpdateManyWithoutSubjectInput>;
+  offers?: Maybe<OfferUpdateManyWithoutOfferedByInput>;
+  authorOf?: Maybe<RatingUpdateManyWithoutAuthorInput>;
 }
 
-export type SkillTypeWhereUniqueInput = AtLeastOne<{
+export interface UserUpdateWithoutOffersDataInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  authorOf?: Maybe<RatingUpdateManyWithoutAuthorInput>;
+}
+
+export type RatingWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface RatingUpdateManyWithoutSubjectInput {
+export interface RatingUpdateManyWithoutAuthorInput {
   create?: Maybe<
-    RatingCreateWithoutSubjectInput[] | RatingCreateWithoutSubjectInput
+    RatingCreateWithoutAuthorInput[] | RatingCreateWithoutAuthorInput
   >;
   delete?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
   connect?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
   set?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
   disconnect?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
   update?: Maybe<
-    | RatingUpdateWithWhereUniqueWithoutSubjectInput[]
-    | RatingUpdateWithWhereUniqueWithoutSubjectInput
+    | RatingUpdateWithWhereUniqueWithoutAuthorInput[]
+    | RatingUpdateWithWhereUniqueWithoutAuthorInput
   >;
   upsert?: Maybe<
-    | RatingUpsertWithWhereUniqueWithoutSubjectInput[]
-    | RatingUpsertWithWhereUniqueWithoutSubjectInput
+    | RatingUpsertWithWhereUniqueWithoutAuthorInput[]
+    | RatingUpsertWithWhereUniqueWithoutAuthorInput
   >;
   deleteMany?: Maybe<RatingScalarWhereInput[] | RatingScalarWhereInput>;
+}
+
+export interface TradeUpdateInput {
+  offer?: Maybe<OfferUpdateOneRequiredWithoutTradedInInput>;
+  other?: Maybe<TradeUpdateOneInput>;
+  scheduledFor?: Maybe<DateTimeInput>;
+}
+
+export interface RatingUpdateWithWhereUniqueWithoutAuthorInput {
+  where: RatingWhereUniqueInput;
+  data: RatingUpdateWithoutAuthorDataInput;
+}
+
+export type SkillWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface RatingUpdateWithoutAuthorDataInput {
+  subject?: Maybe<OfferUpdateOneRequiredWithoutRatedByInput>;
+}
+
+export interface SkillUpdateManyWithWhereNestedInput {
+  where: SkillScalarWhereInput;
+  data: SkillUpdateManyDataInput;
+}
+
+export interface OfferUpdateOneRequiredWithoutRatedByInput {
+  create?: Maybe<OfferCreateWithoutRatedByInput>;
+  update?: Maybe<OfferUpdateWithoutRatedByDataInput>;
+  upsert?: Maybe<OfferUpsertWithoutRatedByInput>;
+  connect?: Maybe<OfferWhereUniqueInput>;
+}
+
+export type SkillTypeWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface OfferUpdateWithoutRatedByDataInput {
+  offeredBy?: Maybe<UserUpdateOneRequiredWithoutOffersInput>;
+  skill?: Maybe<SkillUpdateOneRequiredWithoutOfferedInInput>;
+  tradedIn?: Maybe<TradeUpdateManyWithoutOfferInput>;
 }
 
 export interface SkillUpdateWithoutTypeDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
-  tradedIn?: Maybe<TradeUpdateManyWithoutSkillInput>;
-  ratedIn?: Maybe<SkillUpdateManyInput>;
+  offeredIn?: Maybe<OfferUpdateManyWithoutSkillInput>;
 }
 
-export interface RatingUpdateWithWhereUniqueWithoutSubjectInput {
-  where: RatingWhereUniqueInput;
-  data: RatingUpdateWithoutSubjectDataInput;
+export interface SkillUpdateOneRequiredWithoutOfferedInInput {
+  create?: Maybe<SkillCreateWithoutOfferedInInput>;
+  update?: Maybe<SkillUpdateWithoutOfferedInDataInput>;
+  upsert?: Maybe<SkillUpsertWithoutOfferedInInput>;
+  connect?: Maybe<SkillWhereUniqueInput>;
 }
 
 export interface SkillUpdateManyWithoutTypeInput {
@@ -712,9 +789,10 @@ export interface SkillUpdateManyWithoutTypeInput {
   >;
 }
 
-export interface RatingUpdateWithoutSubjectDataInput {
-  author?: Maybe<UserUpdateOneRequiredWithoutAuthorOfInput>;
-  skill?: Maybe<SkillUpdateOneRequiredInput>;
+export interface SkillUpdateWithoutOfferedInDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  type?: Maybe<SkillTypeUpdateOneRequiredWithoutContainsInput>;
 }
 
 export interface SkillTypeUpdateInput {
@@ -723,10 +801,9 @@ export interface SkillTypeUpdateInput {
   contains?: Maybe<SkillUpdateManyWithoutTypeInput>;
 }
 
-export interface RatingUpsertWithWhereUniqueWithoutSubjectInput {
-  where: RatingWhereUniqueInput;
-  update: RatingUpdateWithoutSubjectDataInput;
-  create: RatingCreateWithoutSubjectInput;
+export interface OfferUpdateWithWhereUniqueWithoutSkillInput {
+  where: OfferWhereUniqueInput;
+  data: OfferUpdateWithoutSkillDataInput;
 }
 
 export interface SkillCreateManyWithoutTypeInput {
@@ -734,12 +811,9 @@ export interface SkillCreateManyWithoutTypeInput {
   connect?: Maybe<SkillWhereUniqueInput[] | SkillWhereUniqueInput>;
 }
 
-export interface SkillUpdateDataInput {
+export interface SkillTypeUpdateWithoutContainsDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
-  type?: Maybe<SkillTypeUpdateOneRequiredWithoutContainsInput>;
-  tradedIn?: Maybe<TradeUpdateManyWithoutSkillInput>;
-  ratedIn?: Maybe<SkillUpdateManyInput>;
 }
 
 export interface SkillTypeCreateInput {
@@ -749,28 +823,24 @@ export interface SkillTypeCreateInput {
   contains?: Maybe<SkillCreateManyWithoutTypeInput>;
 }
 
-export interface SkillTypeUpdateOneRequiredWithoutContainsInput {
-  create?: Maybe<SkillTypeCreateWithoutContainsInput>;
-  update?: Maybe<SkillTypeUpdateWithoutContainsDataInput>;
-  upsert?: Maybe<SkillTypeUpsertWithoutContainsInput>;
-  connect?: Maybe<SkillTypeWhereUniqueInput>;
+export interface SkillTypeUpsertWithoutContainsInput {
+  update: SkillTypeUpdateWithoutContainsDataInput;
+  create: SkillTypeCreateWithoutContainsInput;
 }
 
-export interface SkillUpdateInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  type?: Maybe<SkillTypeUpdateOneRequiredWithoutContainsInput>;
-  tradedIn?: Maybe<TradeUpdateManyWithoutSkillInput>;
-  ratedIn?: Maybe<SkillUpdateManyInput>;
+export interface OfferUpsertWithWhereUniqueWithoutSkillInput {
+  where: OfferWhereUniqueInput;
+  update: OfferUpdateWithoutSkillDataInput;
+  create: OfferCreateWithoutSkillInput;
 }
 
-export interface SkillTypeUpdateWithoutContainsDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
+export interface SkillUpsertWithoutOfferedInInput {
+  update: SkillUpdateWithoutOfferedInDataInput;
+  create: SkillCreateWithoutOfferedInInput;
 }
 
-export interface UserCreateOneWithoutAuthorOfInput {
-  create?: Maybe<UserCreateWithoutAuthorOfInput>;
+export interface UserCreateOneWithoutOffersInput {
+  create?: Maybe<UserCreateWithoutOffersInput>;
   connect?: Maybe<UserWhereUniqueInput>;
 }
 
@@ -841,63 +911,6 @@ export interface SkillTypeWhereInput {
   NOT?: Maybe<SkillTypeWhereInput[] | SkillTypeWhereInput>;
 }
 
-export interface RatingCreateManyWithoutSubjectInput {
-  create?: Maybe<
-    RatingCreateWithoutSubjectInput[] | RatingCreateWithoutSubjectInput
-  >;
-  connect?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
-}
-
-export interface SkillUpsertNestedInput {
-  update: SkillUpdateDataInput;
-  create: SkillCreateInput;
-}
-
-export interface SkillCreateOneInput {
-  create?: Maybe<SkillCreateInput>;
-  connect?: Maybe<SkillWhereUniqueInput>;
-}
-
-export interface TradeUpdateManyDataInput {
-  scheduledFor?: Maybe<DateTimeInput>;
-}
-
-export interface SkillTypeCreateOneWithoutContainsInput {
-  create?: Maybe<SkillTypeCreateWithoutContainsInput>;
-  connect?: Maybe<SkillTypeWhereUniqueInput>;
-}
-
-export interface TradeUpdateWithoutSkillDataInput {
-  user?: Maybe<UserUpdateOneRequiredInput>;
-  other?: Maybe<TradeUpdateOneInput>;
-  scheduledFor?: Maybe<DateTimeInput>;
-}
-
-export interface TradeCreateManyWithoutSkillInput {
-  create?: Maybe<TradeCreateWithoutSkillInput[] | TradeCreateWithoutSkillInput>;
-  connect?: Maybe<TradeWhereUniqueInput[] | TradeWhereUniqueInput>;
-}
-
-export interface UserUpdateOneRequiredInput {
-  create?: Maybe<UserCreateInput>;
-  update?: Maybe<UserUpdateDataInput>;
-  upsert?: Maybe<UserUpsertNestedInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface UserCreateOneInput {
-  create?: Maybe<UserCreateInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface UserUpdateDataInput {
-  name?: Maybe<String>;
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  ratedIn?: Maybe<RatingUpdateManyWithoutSubjectInput>;
-  authorOf?: Maybe<RatingUpdateManyWithoutAuthorInput>;
-}
-
 export interface RatingCreateManyWithoutAuthorInput {
   create?: Maybe<
     RatingCreateWithoutAuthorInput[] | RatingCreateWithoutAuthorInput
@@ -905,33 +918,26 @@ export interface RatingCreateManyWithoutAuthorInput {
   connect?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
 }
 
-export interface RatingUpdateManyWithoutAuthorInput {
-  create?: Maybe<
-    RatingCreateWithoutAuthorInput[] | RatingCreateWithoutAuthorInput
-  >;
-  delete?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
-  connect?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
-  set?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
-  disconnect?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
+export interface OfferUpdateManyWithoutSkillInput {
+  create?: Maybe<OfferCreateWithoutSkillInput[] | OfferCreateWithoutSkillInput>;
+  delete?: Maybe<OfferWhereUniqueInput[] | OfferWhereUniqueInput>;
+  connect?: Maybe<OfferWhereUniqueInput[] | OfferWhereUniqueInput>;
+  set?: Maybe<OfferWhereUniqueInput[] | OfferWhereUniqueInput>;
+  disconnect?: Maybe<OfferWhereUniqueInput[] | OfferWhereUniqueInput>;
   update?: Maybe<
-    | RatingUpdateWithWhereUniqueWithoutAuthorInput[]
-    | RatingUpdateWithWhereUniqueWithoutAuthorInput
+    | OfferUpdateWithWhereUniqueWithoutSkillInput[]
+    | OfferUpdateWithWhereUniqueWithoutSkillInput
   >;
   upsert?: Maybe<
-    | RatingUpsertWithWhereUniqueWithoutAuthorInput[]
-    | RatingUpsertWithWhereUniqueWithoutAuthorInput
+    | OfferUpsertWithWhereUniqueWithoutSkillInput[]
+    | OfferUpsertWithWhereUniqueWithoutSkillInput
   >;
-  deleteMany?: Maybe<RatingScalarWhereInput[] | RatingScalarWhereInput>;
+  deleteMany?: Maybe<OfferScalarWhereInput[] | OfferScalarWhereInput>;
 }
 
-export interface UserCreateOneWithoutRatedInInput {
-  create?: Maybe<UserCreateWithoutRatedInInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface RatingUpdateWithWhereUniqueWithoutAuthorInput {
-  where: RatingWhereUniqueInput;
-  data: RatingUpdateWithoutAuthorDataInput;
+export interface OfferCreateOneWithoutRatedByInput {
+  create?: Maybe<OfferCreateWithoutRatedByInput>;
+  connect?: Maybe<OfferWhereUniqueInput>;
 }
 
 export interface RatingWhereInput {
@@ -950,8 +956,7 @@ export interface RatingWhereInput {
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
   author?: Maybe<UserWhereInput>;
-  subject?: Maybe<UserWhereInput>;
-  skill?: Maybe<SkillWhereInput>;
+  subject?: Maybe<OfferWhereInput>;
   createdAt?: Maybe<DateTimeInput>;
   createdAt_not?: Maybe<DateTimeInput>;
   createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -973,119 +978,9 @@ export interface RatingWhereInput {
   NOT?: Maybe<RatingWhereInput[] | RatingWhereInput>;
 }
 
-export interface RatingUpdateWithoutAuthorDataInput {
-  subject?: Maybe<UserUpdateOneRequiredWithoutRatedInInput>;
-  skill?: Maybe<SkillUpdateOneRequiredInput>;
-}
-
-export interface RatingSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<RatingWhereInput>;
-  AND?: Maybe<RatingSubscriptionWhereInput[] | RatingSubscriptionWhereInput>;
-  OR?: Maybe<RatingSubscriptionWhereInput[] | RatingSubscriptionWhereInput>;
-  NOT?: Maybe<RatingSubscriptionWhereInput[] | RatingSubscriptionWhereInput>;
-}
-
-export interface UserUpdateOneRequiredWithoutRatedInInput {
-  create?: Maybe<UserCreateWithoutRatedInInput>;
-  update?: Maybe<UserUpdateWithoutRatedInDataInput>;
-  upsert?: Maybe<UserUpsertWithoutRatedInInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface TradeUpdateManyMutationInput {
-  scheduledFor?: Maybe<DateTimeInput>;
-}
-
-export interface UserUpdateWithoutRatedInDataInput {
-  name?: Maybe<String>;
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  authorOf?: Maybe<RatingUpdateManyWithoutAuthorInput>;
-}
-
-export interface SkillUpsertWithWhereUniqueWithoutTypeInput {
-  where: SkillWhereUniqueInput;
-  update: SkillUpdateWithoutTypeDataInput;
-  create: SkillCreateWithoutTypeInput;
-}
-
-export interface UserUpsertWithoutRatedInInput {
-  update: UserUpdateWithoutRatedInDataInput;
-  create: UserCreateWithoutRatedInInput;
-}
-
-export type TradeWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface RatingUpsertWithWhereUniqueWithoutAuthorInput {
-  where: RatingWhereUniqueInput;
-  update: RatingUpdateWithoutAuthorDataInput;
-  create: RatingCreateWithoutAuthorInput;
-}
-
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  email?: Maybe<String>;
-}>;
-
-export interface RatingScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<RatingScalarWhereInput[] | RatingScalarWhereInput>;
-  OR?: Maybe<RatingScalarWhereInput[] | RatingScalarWhereInput>;
-  NOT?: Maybe<RatingScalarWhereInput[] | RatingScalarWhereInput>;
-}
-
-export interface UserUpsertWithoutAuthorOfInput {
-  update: UserUpdateWithoutAuthorOfDataInput;
-  create: UserCreateWithoutAuthorOfInput;
-}
-
-export interface UserUpsertNestedInput {
-  update: UserUpdateDataInput;
-  create: UserCreateInput;
-}
-
-export interface UserCreateWithoutAuthorOfInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  email: String;
-  password: String;
-  ratedIn?: Maybe<RatingCreateManyWithoutSubjectInput>;
+export interface SkillCreateOneWithoutOfferedInInput {
+  create?: Maybe<SkillCreateWithoutOfferedInInput>;
+  connect?: Maybe<SkillWhereUniqueInput>;
 }
 
 export interface TradeUpdateOneInput {
@@ -1097,47 +992,74 @@ export interface TradeUpdateOneInput {
   connect?: Maybe<TradeWhereUniqueInput>;
 }
 
-export interface SkillCreateInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description: String;
-  type: SkillTypeCreateOneWithoutContainsInput;
-  tradedIn?: Maybe<TradeCreateManyWithoutSkillInput>;
-  ratedIn?: Maybe<SkillCreateManyInput>;
+export interface SkillTypeCreateOneWithoutContainsInput {
+  create?: Maybe<SkillTypeCreateWithoutContainsInput>;
+  connect?: Maybe<SkillTypeWhereUniqueInput>;
 }
 
 export interface TradeUpdateDataInput {
-  user?: Maybe<UserUpdateOneRequiredInput>;
-  skill?: Maybe<SkillUpdateOneRequiredWithoutTradedInInput>;
+  offer?: Maybe<OfferUpdateOneRequiredWithoutTradedInInput>;
   other?: Maybe<TradeUpdateOneInput>;
   scheduledFor?: Maybe<DateTimeInput>;
 }
 
-export interface TradeCreateWithoutSkillInput {
-  id?: Maybe<ID_Input>;
-  user: UserCreateOneInput;
-  other?: Maybe<TradeCreateOneInput>;
-  scheduledFor?: Maybe<DateTimeInput>;
+export interface TradeCreateManyWithoutOfferInput {
+  create?: Maybe<TradeCreateWithoutOfferInput[] | TradeCreateWithoutOfferInput>;
+  connect?: Maybe<TradeWhereUniqueInput[] | TradeWhereUniqueInput>;
 }
 
-export interface SkillUpdateOneRequiredWithoutTradedInInput {
-  create?: Maybe<SkillCreateWithoutTradedInInput>;
-  update?: Maybe<SkillUpdateWithoutTradedInDataInput>;
-  upsert?: Maybe<SkillUpsertWithoutTradedInInput>;
-  connect?: Maybe<SkillWhereUniqueInput>;
+export interface OfferUpdateOneRequiredWithoutTradedInInput {
+  create?: Maybe<OfferCreateWithoutTradedInInput>;
+  update?: Maybe<OfferUpdateWithoutTradedInDataInput>;
+  upsert?: Maybe<OfferUpsertWithoutTradedInInput>;
+  connect?: Maybe<OfferWhereUniqueInput>;
 }
 
-export interface RatingCreateWithoutAuthorInput {
-  id?: Maybe<ID_Input>;
-  subject: UserCreateOneWithoutRatedInInput;
-  skill: SkillCreateOneInput;
+export interface TradeCreateOneInput {
+  create?: Maybe<TradeCreateInput>;
+  connect?: Maybe<TradeWhereUniqueInput>;
 }
 
-export interface SkillUpdateWithoutTradedInDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  type?: Maybe<SkillTypeUpdateOneRequiredWithoutContainsInput>;
-  ratedIn?: Maybe<SkillUpdateManyInput>;
+export interface OfferUpdateWithoutTradedInDataInput {
+  offeredBy?: Maybe<UserUpdateOneRequiredWithoutOffersInput>;
+  skill?: Maybe<SkillUpdateOneRequiredWithoutOfferedInInput>;
+  ratedBy?: Maybe<RatingUpdateManyWithoutSubjectInput>;
+}
+
+export interface OfferCreateOneWithoutTradedInInput {
+  create?: Maybe<OfferCreateWithoutTradedInInput>;
+  connect?: Maybe<OfferWhereUniqueInput>;
+}
+
+export interface RatingUpdateManyWithoutSubjectInput {
+  create?: Maybe<
+    RatingCreateWithoutSubjectInput[] | RatingCreateWithoutSubjectInput
+  >;
+  delete?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
+  connect?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
+  set?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
+  disconnect?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
+  update?: Maybe<
+    | RatingUpdateWithWhereUniqueWithoutSubjectInput[]
+    | RatingUpdateWithWhereUniqueWithoutSubjectInput
+  >;
+  upsert?: Maybe<
+    | RatingUpsertWithWhereUniqueWithoutSubjectInput[]
+    | RatingUpsertWithWhereUniqueWithoutSubjectInput
+  >;
+  deleteMany?: Maybe<RatingScalarWhereInput[] | RatingScalarWhereInput>;
+}
+
+export interface RatingCreateManyWithoutSubjectInput {
+  create?: Maybe<
+    RatingCreateWithoutSubjectInput[] | RatingCreateWithoutSubjectInput
+  >;
+  connect?: Maybe<RatingWhereUniqueInput[] | RatingWhereUniqueInput>;
+}
+
+export interface RatingUpdateWithWhereUniqueWithoutSubjectInput {
+  where: RatingWhereUniqueInput;
+  data: RatingUpdateWithoutSubjectDataInput;
 }
 
 export interface SkillTypeSubscriptionWhereInput {
@@ -1157,24 +1079,42 @@ export interface SkillTypeSubscriptionWhereInput {
   >;
 }
 
-export interface SkillUpdateManyInput {
-  create?: Maybe<SkillCreateInput[] | SkillCreateInput>;
-  update?: Maybe<
-    | SkillUpdateWithWhereUniqueNestedInput[]
-    | SkillUpdateWithWhereUniqueNestedInput
-  >;
-  upsert?: Maybe<
-    | SkillUpsertWithWhereUniqueNestedInput[]
-    | SkillUpsertWithWhereUniqueNestedInput
-  >;
-  delete?: Maybe<SkillWhereUniqueInput[] | SkillWhereUniqueInput>;
-  connect?: Maybe<SkillWhereUniqueInput[] | SkillWhereUniqueInput>;
-  set?: Maybe<SkillWhereUniqueInput[] | SkillWhereUniqueInput>;
-  disconnect?: Maybe<SkillWhereUniqueInput[] | SkillWhereUniqueInput>;
-  deleteMany?: Maybe<SkillScalarWhereInput[] | SkillScalarWhereInput>;
-  updateMany?: Maybe<
-    SkillUpdateManyWithWhereNestedInput[] | SkillUpdateManyWithWhereNestedInput
-  >;
+export interface RatingUpdateWithoutSubjectDataInput {
+  author?: Maybe<UserUpdateOneRequiredWithoutAuthorOfInput>;
+}
+
+export interface RatingSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<RatingWhereInput>;
+  AND?: Maybe<RatingSubscriptionWhereInput[] | RatingSubscriptionWhereInput>;
+  OR?: Maybe<RatingSubscriptionWhereInput[] | RatingSubscriptionWhereInput>;
+  NOT?: Maybe<RatingSubscriptionWhereInput[] | RatingSubscriptionWhereInput>;
+}
+
+export interface UserUpdateOneRequiredWithoutAuthorOfInput {
+  create?: Maybe<UserCreateWithoutAuthorOfInput>;
+  update?: Maybe<UserUpdateWithoutAuthorOfDataInput>;
+  upsert?: Maybe<UserUpsertWithoutAuthorOfInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  email: String;
+  password: String;
+  offers?: Maybe<OfferCreateManyWithoutOfferedByInput>;
+  authorOf?: Maybe<RatingCreateManyWithoutAuthorInput>;
+}
+
+export interface UserUpdateWithoutAuthorOfDataInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  offers?: Maybe<OfferUpdateManyWithoutOfferedByInput>;
 }
 
 export interface SkillTypeUpdateManyMutationInput {
@@ -1182,30 +1122,23 @@ export interface SkillTypeUpdateManyMutationInput {
   description?: Maybe<String>;
 }
 
-export interface SkillUpdateWithWhereUniqueNestedInput {
-  where: SkillWhereUniqueInput;
-  data: SkillUpdateDataInput;
-}
-
-export interface SkillCreateWithoutTypeInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description: String;
-  tradedIn?: Maybe<TradeCreateManyWithoutSkillInput>;
-  ratedIn?: Maybe<SkillCreateManyInput>;
-}
-
-export interface SkillUpsertWithWhereUniqueNestedInput {
-  where: SkillWhereUniqueInput;
-  update: SkillUpdateDataInput;
-  create: SkillCreateInput;
-}
-
-export interface RatingCreateInput {
-  id?: Maybe<ID_Input>;
-  author: UserCreateOneWithoutAuthorOfInput;
-  subject: UserCreateOneWithoutRatedInInput;
-  skill: SkillCreateOneInput;
+export interface OfferUpdateManyWithoutOfferedByInput {
+  create?: Maybe<
+    OfferCreateWithoutOfferedByInput[] | OfferCreateWithoutOfferedByInput
+  >;
+  delete?: Maybe<OfferWhereUniqueInput[] | OfferWhereUniqueInput>;
+  connect?: Maybe<OfferWhereUniqueInput[] | OfferWhereUniqueInput>;
+  set?: Maybe<OfferWhereUniqueInput[] | OfferWhereUniqueInput>;
+  disconnect?: Maybe<OfferWhereUniqueInput[] | OfferWhereUniqueInput>;
+  update?: Maybe<
+    | OfferUpdateWithWhereUniqueWithoutOfferedByInput[]
+    | OfferUpdateWithWhereUniqueWithoutOfferedByInput
+  >;
+  upsert?: Maybe<
+    | OfferUpsertWithWhereUniqueWithoutOfferedByInput[]
+    | OfferUpsertWithWhereUniqueWithoutOfferedByInput
+  >;
+  deleteMany?: Maybe<OfferScalarWhereInput[] | OfferScalarWhereInput>;
 }
 
 export interface SkillScalarWhereInput {
@@ -1272,36 +1205,218 @@ export interface SkillScalarWhereInput {
   NOT?: Maybe<SkillScalarWhereInput[] | SkillScalarWhereInput>;
 }
 
-export interface SkillTypeCreateWithoutContainsInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description: String;
-}
-
-export interface SkillUpdateManyWithWhereNestedInput {
-  where: SkillScalarWhereInput;
-  data: SkillUpdateManyDataInput;
-}
-
-export interface UserSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<UserWhereInput>;
-  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-}
-
-export interface SkillUpdateManyDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
+export interface OfferUpdateWithWhereUniqueWithoutOfferedByInput {
+  where: OfferWhereUniqueInput;
+  data: OfferUpdateWithoutOfferedByDataInput;
 }
 
 export interface SkillUpdateWithWhereUniqueWithoutTypeInput {
   where: SkillWhereUniqueInput;
   data: SkillUpdateWithoutTypeDataInput;
+}
+
+export interface OfferUpdateWithoutOfferedByDataInput {
+  skill?: Maybe<SkillUpdateOneRequiredWithoutOfferedInInput>;
+  tradedIn?: Maybe<TradeUpdateManyWithoutOfferInput>;
+  ratedBy?: Maybe<RatingUpdateManyWithoutSubjectInput>;
+}
+
+export interface SkillCreateWithoutTypeInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description: String;
+  offeredIn?: Maybe<OfferCreateManyWithoutSkillInput>;
+}
+
+export interface OfferUpsertWithWhereUniqueWithoutOfferedByInput {
+  where: OfferWhereUniqueInput;
+  update: OfferUpdateWithoutOfferedByDataInput;
+  create: OfferCreateWithoutOfferedByInput;
+}
+
+export interface SkillUpdateManyMutationInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+}
+
+export interface OfferScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<OfferScalarWhereInput[] | OfferScalarWhereInput>;
+  OR?: Maybe<OfferScalarWhereInput[] | OfferScalarWhereInput>;
+  NOT?: Maybe<OfferScalarWhereInput[] | OfferScalarWhereInput>;
+}
+
+export interface OfferCreateInput {
+  id?: Maybe<ID_Input>;
+  offeredBy: UserCreateOneWithoutOffersInput;
+  skill: SkillCreateOneWithoutOfferedInInput;
+  tradedIn?: Maybe<TradeCreateManyWithoutOfferInput>;
+  ratedBy?: Maybe<RatingCreateManyWithoutSubjectInput>;
+}
+
+export interface UserUpsertWithoutAuthorOfInput {
+  update: UserUpdateWithoutAuthorOfDataInput;
+  create: UserCreateWithoutAuthorOfInput;
+}
+
+export interface RatingCreateWithoutAuthorInput {
+  id?: Maybe<ID_Input>;
+  subject: OfferCreateOneWithoutRatedByInput;
+}
+
+export interface RatingUpsertWithWhereUniqueWithoutSubjectInput {
+  where: RatingWhereUniqueInput;
+  update: RatingUpdateWithoutSubjectDataInput;
+  create: RatingCreateWithoutSubjectInput;
+}
+
+export interface SkillCreateWithoutOfferedInInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description: String;
+  type: SkillTypeCreateOneWithoutContainsInput;
+}
+
+export interface RatingScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<RatingScalarWhereInput[] | RatingScalarWhereInput>;
+  OR?: Maybe<RatingScalarWhereInput[] | RatingScalarWhereInput>;
+  NOT?: Maybe<RatingScalarWhereInput[] | RatingScalarWhereInput>;
+}
+
+export interface TradeCreateWithoutOfferInput {
+  id?: Maybe<ID_Input>;
+  other?: Maybe<TradeCreateOneInput>;
+  scheduledFor?: Maybe<DateTimeInput>;
+}
+
+export interface OfferUpsertWithoutTradedInInput {
+  update: OfferUpdateWithoutTradedInDataInput;
+  create: OfferCreateWithoutTradedInInput;
+}
+
+export interface OfferCreateWithoutTradedInInput {
+  id?: Maybe<ID_Input>;
+  offeredBy: UserCreateOneWithoutOffersInput;
+  skill: SkillCreateOneWithoutOfferedInInput;
+  ratedBy?: Maybe<RatingCreateManyWithoutSubjectInput>;
+}
+
+export interface TradeUpsertNestedInput {
+  update: TradeUpdateDataInput;
+  create: TradeCreateInput;
+}
+
+export interface OfferWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  offeredBy?: Maybe<UserWhereInput>;
+  skill?: Maybe<SkillWhereInput>;
+  tradedIn_every?: Maybe<TradeWhereInput>;
+  tradedIn_some?: Maybe<TradeWhereInput>;
+  tradedIn_none?: Maybe<TradeWhereInput>;
+  ratedBy_every?: Maybe<RatingWhereInput>;
+  ratedBy_some?: Maybe<RatingWhereInput>;
+  ratedBy_none?: Maybe<RatingWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<OfferWhereInput[] | OfferWhereInput>;
+  OR?: Maybe<OfferWhereInput[] | OfferWhereInput>;
+  NOT?: Maybe<OfferWhereInput[] | OfferWhereInput>;
+}
+
+export interface TradeUpsertWithWhereUniqueWithoutOfferInput {
+  where: TradeWhereUniqueInput;
+  update: TradeUpdateWithoutOfferDataInput;
+  create: TradeCreateWithoutOfferInput;
+}
+
+export interface TradeUpdateManyMutationInput {
+  scheduledFor?: Maybe<DateTimeInput>;
 }
 
 export interface TradeScalarWhereInput {
@@ -1348,48 +1463,134 @@ export interface TradeScalarWhereInput {
   NOT?: Maybe<TradeScalarWhereInput[] | TradeScalarWhereInput>;
 }
 
-export interface TradeUpsertWithWhereUniqueWithoutSkillInput {
-  where: TradeWhereUniqueInput;
-  update: TradeUpdateWithoutSkillDataInput;
-  create: TradeCreateWithoutSkillInput;
+export interface SkillUpsertWithWhereUniqueWithoutTypeInput {
+  where: SkillWhereUniqueInput;
+  update: SkillUpdateWithoutTypeDataInput;
+  create: SkillCreateWithoutTypeInput;
 }
 
-export interface TradeUpsertNestedInput {
-  update: TradeUpdateDataInput;
-  create: TradeCreateInput;
+export interface TradeUpdateManyWithWhereNestedInput {
+  where: TradeScalarWhereInput;
+  data: TradeUpdateManyDataInput;
 }
 
-export interface SkillUpsertWithoutTradedInInput {
-  update: SkillUpdateWithoutTradedInDataInput;
-  create: SkillCreateWithoutTradedInInput;
-}
-
-export interface SkillUpdateManyMutationInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-}
-
-export interface UserUpdateInput {
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
   name?: Maybe<String>;
   email?: Maybe<String>;
-  password?: Maybe<String>;
-  ratedIn?: Maybe<RatingUpdateManyWithoutSubjectInput>;
-  authorOf?: Maybe<RatingUpdateManyWithoutAuthorInput>;
+}>;
+
+export interface TradeUpdateManyDataInput {
+  scheduledFor?: Maybe<DateTimeInput>;
 }
 
-export interface UserCreateInput {
+export interface UserCreateWithoutOffersInput {
   id?: Maybe<ID_Input>;
   name: String;
   email: String;
   password: String;
-  ratedIn?: Maybe<RatingCreateManyWithoutSubjectInput>;
   authorOf?: Maybe<RatingCreateManyWithoutAuthorInput>;
 }
 
-export interface RatingCreateWithoutSubjectInput {
+export interface OfferUpsertWithoutRatedByInput {
+  update: OfferUpdateWithoutRatedByDataInput;
+  create: OfferCreateWithoutRatedByInput;
+}
+
+export interface SkillTypeCreateWithoutContainsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description: String;
+}
+
+export interface RatingUpsertWithWhereUniqueWithoutAuthorInput {
+  where: RatingWhereUniqueInput;
+  update: RatingUpdateWithoutAuthorDataInput;
+  create: RatingCreateWithoutAuthorInput;
+}
+
+export interface UserSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<UserWhereInput>;
+  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+}
+
+export interface UserUpsertWithoutOffersInput {
+  update: UserUpdateWithoutOffersDataInput;
+  create: UserCreateWithoutOffersInput;
+}
+
+export interface SkillUpdateManyDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+}
+
+export interface SkillUpdateInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  type?: Maybe<SkillTypeUpdateOneRequiredWithoutContainsInput>;
+  offeredIn?: Maybe<OfferUpdateManyWithoutSkillInput>;
+}
+
+export interface OfferUpdateWithoutSkillDataInput {
+  offeredBy?: Maybe<UserUpdateOneRequiredWithoutOffersInput>;
+  tradedIn?: Maybe<TradeUpdateManyWithoutOfferInput>;
+  ratedBy?: Maybe<RatingUpdateManyWithoutSubjectInput>;
+}
+
+export interface SkillCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description: String;
+  type: SkillTypeCreateOneWithoutContainsInput;
+  offeredIn?: Maybe<OfferCreateManyWithoutSkillInput>;
+}
+
+export interface RatingUpdateInput {
+  author?: Maybe<UserUpdateOneRequiredWithoutAuthorOfInput>;
+  subject?: Maybe<OfferUpdateOneRequiredWithoutRatedByInput>;
+}
+
+export interface RatingCreateInput {
   id?: Maybe<ID_Input>;
   author: UserCreateOneWithoutAuthorOfInput;
-  skill: SkillCreateOneInput;
+  subject: OfferCreateOneWithoutRatedByInput;
+}
+
+export interface OfferCreateWithoutSkillInput {
+  id?: Maybe<ID_Input>;
+  offeredBy: UserCreateOneWithoutOffersInput;
+  tradedIn?: Maybe<TradeCreateManyWithoutOfferInput>;
+  ratedBy?: Maybe<RatingCreateManyWithoutSubjectInput>;
+}
+
+export interface OfferCreateWithoutRatedByInput {
+  id?: Maybe<ID_Input>;
+  offeredBy: UserCreateOneWithoutOffersInput;
+  skill: SkillCreateOneWithoutOfferedInInput;
+  tradedIn?: Maybe<TradeCreateManyWithoutOfferInput>;
+}
+
+export type TradeWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface UserUpdateManyMutationInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+}
+
+export interface TradeCreateInput {
+  id?: Maybe<ID_Input>;
+  offer: OfferCreateOneWithoutTradedInInput;
+  other?: Maybe<TradeCreateOneInput>;
+  scheduledFor?: Maybe<DateTimeInput>;
 }
 
 export interface NodeNode {
@@ -1427,6 +1628,578 @@ export interface UserPreviousValuesSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
+export interface RatingEdge {
+  node: Rating;
+  cursor: String;
+}
+
+export interface RatingEdgePromise extends Promise<RatingEdge>, Fragmentable {
+  node: <T = RatingPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface RatingEdgeSubscription
+  extends Promise<AsyncIterator<RatingEdge>>,
+    Fragmentable {
+  node: <T = RatingSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface Skill {
+  id: ID_Output;
+  name: String;
+  description: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface SkillPromise extends Promise<Skill>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  type: <T = SkillTypePromise>() => T;
+  offeredIn: <T = FragmentableArray<Offer>>(args?: {
+    where?: OfferWhereInput;
+    orderBy?: OfferOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface SkillSubscription
+  extends Promise<AsyncIterator<Skill>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  type: <T = SkillTypeSubscription>() => T;
+  offeredIn: <T = Promise<AsyncIterator<OfferSubscription>>>(args?: {
+    where?: OfferWhereInput;
+    orderBy?: OfferOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface SkillNullablePromise
+  extends Promise<Skill | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  type: <T = SkillTypePromise>() => T;
+  offeredIn: <T = FragmentableArray<Offer>>(args?: {
+    where?: OfferWhereInput;
+    orderBy?: OfferOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface RatingConnection {
+  pageInfo: PageInfo;
+  edges: RatingEdge[];
+}
+
+export interface RatingConnectionPromise
+  extends Promise<RatingConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<RatingEdge>>() => T;
+  aggregate: <T = AggregateRatingPromise>() => T;
+}
+
+export interface RatingConnectionSubscription
+  extends Promise<AsyncIterator<RatingConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<RatingEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateRatingSubscription>() => T;
+}
+
+export interface AggregateOffer {
+  count: Int;
+}
+
+export interface AggregateOfferPromise
+  extends Promise<AggregateOffer>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateOfferSubscription
+  extends Promise<AsyncIterator<AggregateOffer>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface BatchPayload {
+  count: Long;
+}
+
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
+    Fragmentable {
+  count: () => Promise<Long>;
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface Rating {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface RatingPromise extends Promise<Rating>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  author: <T = UserPromise>() => T;
+  subject: <T = OfferPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface RatingSubscription
+  extends Promise<AsyncIterator<Rating>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  author: <T = UserSubscription>() => T;
+  subject: <T = OfferSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface RatingNullablePromise
+  extends Promise<Rating | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  author: <T = UserPromise>() => T;
+  subject: <T = OfferPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface OfferEdge {
+  node: Offer;
+  cursor: String;
+}
+
+export interface OfferEdgePromise extends Promise<OfferEdge>, Fragmentable {
+  node: <T = OfferPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OfferEdgeSubscription
+  extends Promise<AsyncIterator<OfferEdge>>,
+    Fragmentable {
+  node: <T = OfferSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface UserEdge {
+  node: User;
+  cursor: String;
+}
+
+export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
+  node: <T = UserPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface UserEdgeSubscription
+  extends Promise<AsyncIterator<UserEdge>>,
+    Fragmentable {
+  node: <T = UserSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface TradeSubscriptionPayload {
+  mutation: MutationType;
+  node: Trade;
+  updatedFields: String[];
+  previousValues: TradePreviousValues;
+}
+
+export interface TradeSubscriptionPayloadPromise
+  extends Promise<TradeSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = TradePromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = TradePreviousValuesPromise>() => T;
+}
+
+export interface TradeSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<TradeSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = TradeSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = TradePreviousValuesSubscription>() => T;
+}
+
+export interface User {
+  id: ID_Output;
+  name: String;
+  email: String;
+  password: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface UserPromise extends Promise<User>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  email: () => Promise<String>;
+  password: () => Promise<String>;
+  offers: <T = FragmentableArray<Offer>>(args?: {
+    where?: OfferWhereInput;
+    orderBy?: OfferOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  authorOf: <T = FragmentableArray<Rating>>(args?: {
+    where?: RatingWhereInput;
+    orderBy?: RatingOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface UserSubscription
+  extends Promise<AsyncIterator<User>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  email: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  offers: <T = Promise<AsyncIterator<OfferSubscription>>>(args?: {
+    where?: OfferWhereInput;
+    orderBy?: OfferOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  authorOf: <T = Promise<AsyncIterator<RatingSubscription>>>(args?: {
+    where?: RatingWhereInput;
+    orderBy?: RatingOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface UserNullablePromise
+  extends Promise<User | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  email: () => Promise<String>;
+  password: () => Promise<String>;
+  offers: <T = FragmentableArray<Offer>>(args?: {
+    where?: OfferWhereInput;
+    orderBy?: OfferOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  authorOf: <T = FragmentableArray<Rating>>(args?: {
+    where?: RatingWhereInput;
+    orderBy?: RatingOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface PageInfo {
+  hasNextPage: Boolean;
+  hasPreviousPage: Boolean;
+  startCursor?: String;
+  endCursor?: String;
+}
+
+export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
+  hasNextPage: () => Promise<Boolean>;
+  hasPreviousPage: () => Promise<Boolean>;
+  startCursor: () => Promise<String>;
+  endCursor: () => Promise<String>;
+}
+
+export interface PageInfoSubscription
+  extends Promise<AsyncIterator<PageInfo>>,
+    Fragmentable {
+  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
+  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
+  startCursor: () => Promise<AsyncIterator<String>>;
+  endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface TradeEdge {
+  node: Trade;
+  cursor: String;
+}
+
+export interface TradeEdgePromise extends Promise<TradeEdge>, Fragmentable {
+  node: <T = TradePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface TradeEdgeSubscription
+  extends Promise<AsyncIterator<TradeEdge>>,
+    Fragmentable {
+  node: <T = TradeSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface Offer {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface OfferPromise extends Promise<Offer>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  offeredBy: <T = UserPromise>() => T;
+  skill: <T = SkillPromise>() => T;
+  tradedIn: <T = FragmentableArray<Trade>>(args?: {
+    where?: TradeWhereInput;
+    orderBy?: TradeOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  ratedBy: <T = FragmentableArray<Rating>>(args?: {
+    where?: RatingWhereInput;
+    orderBy?: RatingOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface OfferSubscription
+  extends Promise<AsyncIterator<Offer>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  offeredBy: <T = UserSubscription>() => T;
+  skill: <T = SkillSubscription>() => T;
+  tradedIn: <T = Promise<AsyncIterator<TradeSubscription>>>(args?: {
+    where?: TradeWhereInput;
+    orderBy?: TradeOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  ratedBy: <T = Promise<AsyncIterator<RatingSubscription>>>(args?: {
+    where?: RatingWhereInput;
+    orderBy?: RatingOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface OfferNullablePromise
+  extends Promise<Offer | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  offeredBy: <T = UserPromise>() => T;
+  skill: <T = SkillPromise>() => T;
+  tradedIn: <T = FragmentableArray<Trade>>(args?: {
+    where?: TradeWhereInput;
+    orderBy?: TradeOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  ratedBy: <T = FragmentableArray<Rating>>(args?: {
+    where?: RatingWhereInput;
+    orderBy?: RatingOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface AggregateSkillType {
+  count: Int;
+}
+
+export interface AggregateSkillTypePromise
+  extends Promise<AggregateSkillType>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateSkillTypeSubscription
+  extends Promise<AsyncIterator<AggregateSkillType>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface OfferSubscriptionPayload {
+  mutation: MutationType;
+  node: Offer;
+  updatedFields: String[];
+  previousValues: OfferPreviousValues;
+}
+
+export interface OfferSubscriptionPayloadPromise
+  extends Promise<OfferSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = OfferPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = OfferPreviousValuesPromise>() => T;
+}
+
+export interface OfferSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<OfferSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = OfferSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = OfferPreviousValuesSubscription>() => T;
+}
+
+export interface SkillTypeConnection {
+  pageInfo: PageInfo;
+  edges: SkillTypeEdge[];
+}
+
+export interface SkillTypeConnectionPromise
+  extends Promise<SkillTypeConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<SkillTypeEdge>>() => T;
+  aggregate: <T = AggregateSkillTypePromise>() => T;
+}
+
+export interface SkillTypeConnectionSubscription
+  extends Promise<AsyncIterator<SkillTypeConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<SkillTypeEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateSkillTypeSubscription>() => T;
+}
+
+export interface OfferPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface OfferPreviousValuesPromise
+  extends Promise<OfferPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface OfferPreviousValuesSubscription
+  extends Promise<AsyncIterator<OfferPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface AggregateSkill {
+  count: Int;
+}
+
+export interface AggregateSkillPromise
+  extends Promise<AggregateSkill>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateSkillSubscription
+  extends Promise<AsyncIterator<AggregateSkill>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface OfferConnection {
+  pageInfo: PageInfo;
+  edges: OfferEdge[];
+}
+
+export interface OfferConnectionPromise
+  extends Promise<OfferConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<OfferEdge>>() => T;
+  aggregate: <T = AggregateOfferPromise>() => T;
+}
+
+export interface OfferConnectionSubscription
+  extends Promise<AsyncIterator<OfferConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<OfferEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateOfferSubscription>() => T;
+}
+
 export interface SkillConnection {
   pageInfo: PageInfo;
   edges: SkillEdge[];
@@ -1448,114 +2221,97 @@ export interface SkillConnectionSubscription
   aggregate: <T = AggregateSkillSubscription>() => T;
 }
 
-export interface Skill {
+export interface RatingSubscriptionPayload {
+  mutation: MutationType;
+  node: Rating;
+  updatedFields: String[];
+  previousValues: RatingPreviousValues;
+}
+
+export interface RatingSubscriptionPayloadPromise
+  extends Promise<RatingSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = RatingPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = RatingPreviousValuesPromise>() => T;
+}
+
+export interface RatingSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<RatingSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = RatingSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = RatingPreviousValuesSubscription>() => T;
+}
+
+export interface UserSubscriptionPayload {
+  mutation: MutationType;
+  node: User;
+  updatedFields: String[];
+  previousValues: UserPreviousValues;
+}
+
+export interface UserSubscriptionPayloadPromise
+  extends Promise<UserSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = UserPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = UserPreviousValuesPromise>() => T;
+}
+
+export interface UserSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = UserSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = UserPreviousValuesSubscription>() => T;
+}
+
+export interface RatingPreviousValues {
   id: ID_Output;
-  name: String;
-  description: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
 
-export interface SkillPromise extends Promise<Skill>, Fragmentable {
+export interface RatingPreviousValuesPromise
+  extends Promise<RatingPreviousValues>,
+    Fragmentable {
   id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  type: <T = SkillTypePromise>() => T;
-  tradedIn: <T = FragmentableArray<Trade>>(args?: {
-    where?: TradeWhereInput;
-    orderBy?: TradeOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  ratedIn: <T = FragmentableArray<Skill>>(args?: {
-    where?: SkillWhereInput;
-    orderBy?: SkillOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface SkillSubscription
-  extends Promise<AsyncIterator<Skill>>,
+export interface RatingPreviousValuesSubscription
+  extends Promise<AsyncIterator<RatingPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-  type: <T = SkillTypeSubscription>() => T;
-  tradedIn: <T = Promise<AsyncIterator<TradeSubscription>>>(args?: {
-    where?: TradeWhereInput;
-    orderBy?: TradeOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  ratedIn: <T = Promise<AsyncIterator<SkillSubscription>>>(args?: {
-    where?: SkillWhereInput;
-    orderBy?: SkillOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface SkillNullablePromise
-  extends Promise<Skill | null>,
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
+}
+
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
     Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  type: <T = SkillTypePromise>() => T;
-  tradedIn: <T = FragmentableArray<Trade>>(args?: {
-    where?: TradeWhereInput;
-    orderBy?: TradeOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  ratedIn: <T = FragmentableArray<Skill>>(args?: {
-    where?: SkillWhereInput;
-    orderBy?: SkillOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
 }
 
-export interface SkillEdge {
-  node: Skill;
-  cursor: String;
-}
-
-export interface SkillEdgePromise extends Promise<SkillEdge>, Fragmentable {
-  node: <T = SkillPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface SkillEdgeSubscription
-  extends Promise<AsyncIterator<SkillEdge>>,
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
     Fragmentable {
-  node: <T = SkillSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
 }
 
 export interface Trade {
@@ -1567,8 +2323,7 @@ export interface Trade {
 
 export interface TradePromise extends Promise<Trade>, Fragmentable {
   id: () => Promise<ID_Output>;
-  user: <T = UserPromise>() => T;
-  skill: <T = SkillPromise>() => T;
+  offer: <T = OfferPromise>() => T;
   other: <T = TradePromise>() => T;
   scheduledFor: () => Promise<DateTimeOutput>;
   createdAt: () => Promise<DateTimeOutput>;
@@ -1579,8 +2334,7 @@ export interface TradeSubscription
   extends Promise<AsyncIterator<Trade>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  user: <T = UserSubscription>() => T;
-  skill: <T = SkillSubscription>() => T;
+  offer: <T = OfferSubscription>() => T;
   other: <T = TradeSubscription>() => T;
   scheduledFor: () => Promise<AsyncIterator<DateTimeOutput>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
@@ -1591,12 +2345,57 @@ export interface TradeNullablePromise
   extends Promise<Trade | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  user: <T = UserPromise>() => T;
-  skill: <T = SkillPromise>() => T;
+  offer: <T = OfferPromise>() => T;
   other: <T = TradePromise>() => T;
   scheduledFor: () => Promise<DateTimeOutput>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface TradeConnection {
+  pageInfo: PageInfo;
+  edges: TradeEdge[];
+}
+
+export interface TradeConnectionPromise
+  extends Promise<TradeConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<TradeEdge>>() => T;
+  aggregate: <T = AggregateTradePromise>() => T;
+}
+
+export interface TradeConnectionSubscription
+  extends Promise<AsyncIterator<TradeConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<TradeEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateTradeSubscription>() => T;
+}
+
+export interface SkillSubscriptionPayload {
+  mutation: MutationType;
+  node: Skill;
+  updatedFields: String[];
+  previousValues: SkillPreviousValues;
+}
+
+export interface SkillSubscriptionPayloadPromise
+  extends Promise<SkillSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = SkillPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = SkillPreviousValuesPromise>() => T;
+}
+
+export interface SkillSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<SkillSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = SkillSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = SkillPreviousValuesSubscription>() => T;
 }
 
 export interface TradePreviousValues {
@@ -1640,248 +2439,57 @@ export interface AggregateRatingSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface AggregateUser {
-  count: Int;
-}
-
-export interface AggregateUserPromise
-  extends Promise<AggregateUser>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUser>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface UserSubscriptionPayload {
-  mutation: MutationType;
-  node: User;
-  updatedFields: String[];
-  previousValues: UserPreviousValues;
-}
-
-export interface UserSubscriptionPayloadPromise
-  extends Promise<UserSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = UserPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = UserPreviousValuesPromise>() => T;
-}
-
-export interface UserSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = UserSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = UserPreviousValuesSubscription>() => T;
-}
-
-export interface RatingEdge {
-  node: Rating;
-  cursor: String;
-}
-
-export interface RatingEdgePromise extends Promise<RatingEdge>, Fragmentable {
-  node: <T = RatingPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface RatingEdgeSubscription
-  extends Promise<AsyncIterator<RatingEdge>>,
-    Fragmentable {
-  node: <T = RatingSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface UserConnection {
-  pageInfo: PageInfo;
-  edges: UserEdge[];
-}
-
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
-}
-
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
-}
-
-export interface TradeSubscriptionPayload {
-  mutation: MutationType;
-  node: Trade;
-  updatedFields: String[];
-  previousValues: TradePreviousValues;
-}
-
-export interface TradeSubscriptionPayloadPromise
-  extends Promise<TradeSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = TradePromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = TradePreviousValuesPromise>() => T;
-}
-
-export interface TradeSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<TradeSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = TradeSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = TradePreviousValuesSubscription>() => T;
-}
-
-export interface AggregateTrade {
-  count: Int;
-}
-
-export interface AggregateTradePromise
-  extends Promise<AggregateTrade>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateTradeSubscription
-  extends Promise<AsyncIterator<AggregateTrade>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface Rating {
+export interface SkillTypePreviousValues {
   id: ID_Output;
+  name: String;
+  description: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
 
-export interface RatingPromise extends Promise<Rating>, Fragmentable {
+export interface SkillTypePreviousValuesPromise
+  extends Promise<SkillTypePreviousValues>,
+    Fragmentable {
   id: () => Promise<ID_Output>;
-  author: <T = UserPromise>() => T;
-  subject: <T = UserPromise>() => T;
-  skill: <T = SkillPromise>() => T;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface RatingSubscription
-  extends Promise<AsyncIterator<Rating>>,
+export interface SkillTypePreviousValuesSubscription
+  extends Promise<AsyncIterator<SkillTypePreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  author: <T = UserSubscription>() => T;
-  subject: <T = UserSubscription>() => T;
-  skill: <T = SkillSubscription>() => T;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface RatingNullablePromise
-  extends Promise<Rating | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  author: <T = UserPromise>() => T;
-  subject: <T = UserPromise>() => T;
-  skill: <T = SkillPromise>() => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface TradeConnection {
-  pageInfo: PageInfo;
-  edges: TradeEdge[];
-}
-
-export interface TradeConnectionPromise
-  extends Promise<TradeConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<TradeEdge>>() => T;
-  aggregate: <T = AggregateTradePromise>() => T;
-}
-
-export interface TradeConnectionSubscription
-  extends Promise<AsyncIterator<TradeConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<TradeEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateTradeSubscription>() => T;
-}
-
-export interface RatingSubscriptionPayload {
+export interface SkillTypeSubscriptionPayload {
   mutation: MutationType;
-  node: Rating;
-  updatedFields: String[];
-  previousValues: RatingPreviousValues;
-}
-
-export interface RatingSubscriptionPayloadPromise
-  extends Promise<RatingSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = RatingPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = RatingPreviousValuesPromise>() => T;
-}
-
-export interface RatingSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<RatingSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = RatingSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = RatingPreviousValuesSubscription>() => T;
-}
-
-export interface SkillTypeEdge {
   node: SkillType;
-  cursor: String;
+  updatedFields: String[];
+  previousValues: SkillTypePreviousValues;
 }
 
-export interface SkillTypeEdgePromise
-  extends Promise<SkillTypeEdge>,
+export interface SkillTypeSubscriptionPayloadPromise
+  extends Promise<SkillTypeSubscriptionPayload>,
     Fragmentable {
+  mutation: () => Promise<MutationType>;
   node: <T = SkillTypePromise>() => T;
-  cursor: () => Promise<String>;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = SkillTypePreviousValuesPromise>() => T;
 }
 
-export interface SkillTypeEdgeSubscription
-  extends Promise<AsyncIterator<SkillTypeEdge>>,
+export interface SkillTypeSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<SkillTypeSubscriptionPayload>>,
     Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
   node: <T = SkillTypeSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface RatingPreviousValues {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface RatingPreviousValuesPromise
-  extends Promise<RatingPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface RatingPreviousValuesSubscription
-  extends Promise<AsyncIterator<RatingPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = SkillTypePreviousValuesSubscription>() => T;
 }
 
 export interface SkillType {
@@ -1947,254 +2555,6 @@ export interface SkillTypeNullablePromise
   updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface PageInfo {
-  hasNextPage: Boolean;
-  hasPreviousPage: Boolean;
-  startCursor?: String;
-  endCursor?: String;
-}
-
-export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
-  hasNextPage: () => Promise<Boolean>;
-  hasPreviousPage: () => Promise<Boolean>;
-  startCursor: () => Promise<String>;
-  endCursor: () => Promise<String>;
-}
-
-export interface PageInfoSubscription
-  extends Promise<AsyncIterator<PageInfo>>,
-    Fragmentable {
-  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
-  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
-  startCursor: () => Promise<AsyncIterator<String>>;
-  endCursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface BatchPayload {
-  count: Long;
-}
-
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
-    Fragmentable {
-  count: () => Promise<Long>;
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
-}
-
-export interface SkillSubscriptionPayload {
-  mutation: MutationType;
-  node: Skill;
-  updatedFields: String[];
-  previousValues: SkillPreviousValues;
-}
-
-export interface SkillSubscriptionPayloadPromise
-  extends Promise<SkillSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = SkillPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = SkillPreviousValuesPromise>() => T;
-}
-
-export interface SkillSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<SkillSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = SkillSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = SkillPreviousValuesSubscription>() => T;
-}
-
-export interface User {
-  id: ID_Output;
-  name: String;
-  email: String;
-  password: String;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface UserPromise extends Promise<User>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  email: () => Promise<String>;
-  password: () => Promise<String>;
-  ratedIn: <T = FragmentableArray<Rating>>(args?: {
-    where?: RatingWhereInput;
-    orderBy?: RatingOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  authorOf: <T = FragmentableArray<Rating>>(args?: {
-    where?: RatingWhereInput;
-    orderBy?: RatingOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface UserSubscription
-  extends Promise<AsyncIterator<User>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  email: () => Promise<AsyncIterator<String>>;
-  password: () => Promise<AsyncIterator<String>>;
-  ratedIn: <T = Promise<AsyncIterator<RatingSubscription>>>(args?: {
-    where?: RatingWhereInput;
-    orderBy?: RatingOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  authorOf: <T = Promise<AsyncIterator<RatingSubscription>>>(args?: {
-    where?: RatingWhereInput;
-    orderBy?: RatingOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface UserNullablePromise
-  extends Promise<User | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  email: () => Promise<String>;
-  password: () => Promise<String>;
-  ratedIn: <T = FragmentableArray<Rating>>(args?: {
-    where?: RatingWhereInput;
-    orderBy?: RatingOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  authorOf: <T = FragmentableArray<Rating>>(args?: {
-    where?: RatingWhereInput;
-    orderBy?: RatingOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface AggregateSkillType {
-  count: Int;
-}
-
-export interface AggregateSkillTypePromise
-  extends Promise<AggregateSkillType>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateSkillTypeSubscription
-  extends Promise<AsyncIterator<AggregateSkillType>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface SkillTypePreviousValues {
-  id: ID_Output;
-  name: String;
-  description: String;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface SkillTypePreviousValuesPromise
-  extends Promise<SkillTypePreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface SkillTypePreviousValuesSubscription
-  extends Promise<AsyncIterator<SkillTypePreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface SkillTypeSubscriptionPayload {
-  mutation: MutationType;
-  node: SkillType;
-  updatedFields: String[];
-  previousValues: SkillTypePreviousValues;
-}
-
-export interface SkillTypeSubscriptionPayloadPromise
-  extends Promise<SkillTypeSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = SkillTypePromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = SkillTypePreviousValuesPromise>() => T;
-}
-
-export interface SkillTypeSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<SkillTypeSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = SkillTypeSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = SkillTypePreviousValuesSubscription>() => T;
-}
-
-export interface RatingConnection {
-  pageInfo: PageInfo;
-  edges: RatingEdge[];
-}
-
-export interface RatingConnectionPromise
-  extends Promise<RatingConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<RatingEdge>>() => T;
-  aggregate: <T = AggregateRatingPromise>() => T;
-}
-
-export interface RatingConnectionSubscription
-  extends Promise<AsyncIterator<RatingConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<RatingEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateRatingSubscription>() => T;
-}
-
 export interface SkillPreviousValues {
   id: ID_Output;
   name: String;
@@ -2223,73 +2583,70 @@ export interface SkillPreviousValuesSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface SkillTypeConnection {
-  pageInfo: PageInfo;
-  edges: SkillTypeEdge[];
-}
-
-export interface SkillTypeConnectionPromise
-  extends Promise<SkillTypeConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<SkillTypeEdge>>() => T;
-  aggregate: <T = AggregateSkillTypePromise>() => T;
-}
-
-export interface SkillTypeConnectionSubscription
-  extends Promise<AsyncIterator<SkillTypeConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<SkillTypeEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateSkillTypeSubscription>() => T;
-}
-
-export interface TradeEdge {
-  node: Trade;
-  cursor: String;
-}
-
-export interface TradeEdgePromise extends Promise<TradeEdge>, Fragmentable {
-  node: <T = TradePromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface TradeEdgeSubscription
-  extends Promise<AsyncIterator<TradeEdge>>,
-    Fragmentable {
-  node: <T = TradeSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface UserEdge {
-  node: User;
-  cursor: String;
-}
-
-export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
-  node: <T = UserPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface UserEdgeSubscription
-  extends Promise<AsyncIterator<UserEdge>>,
-    Fragmentable {
-  node: <T = UserSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateSkill {
+export interface AggregateUser {
   count: Int;
 }
 
-export interface AggregateSkillPromise
-  extends Promise<AggregateSkill>,
+export interface AggregateUserPromise
+  extends Promise<AggregateUser>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateSkillSubscription
-  extends Promise<AsyncIterator<AggregateSkill>>,
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUser>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface SkillEdge {
+  node: Skill;
+  cursor: String;
+}
+
+export interface SkillEdgePromise extends Promise<SkillEdge>, Fragmentable {
+  node: <T = SkillPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface SkillEdgeSubscription
+  extends Promise<AsyncIterator<SkillEdge>>,
+    Fragmentable {
+  node: <T = SkillSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface SkillTypeEdge {
+  node: SkillType;
+  cursor: String;
+}
+
+export interface SkillTypeEdgePromise
+  extends Promise<SkillTypeEdge>,
+    Fragmentable {
+  node: <T = SkillTypePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface SkillTypeEdgeSubscription
+  extends Promise<AsyncIterator<SkillTypeEdge>>,
+    Fragmentable {
+  node: <T = SkillTypeSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateTrade {
+  count: Int;
+}
+
+export interface AggregateTradePromise
+  extends Promise<AggregateTrade>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateTradeSubscription
+  extends Promise<AsyncIterator<AggregateTrade>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
@@ -2299,18 +2656,7 @@ The `Int` scalar type represents non-fractional signed whole numeric values. Int
 */
 export type Int = number;
 
-/*
-The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
-*/
-export type ID_Input = string | number;
-export type ID_Output = string;
-
 export type Long = string;
-
-/*
-The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
-*/
-export type String = string;
 
 /*
 DateTime scalar input type, allowing Date
@@ -2321,6 +2667,17 @@ export type DateTimeInput = Date | string;
 DateTime scalar output type, which is always a string
 */
 export type DateTimeOutput = string;
+
+/*
+The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
+*/
+export type ID_Input = string | number;
+export type ID_Output = string;
+
+/*
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+*/
+export type String = string;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.
@@ -2350,6 +2707,10 @@ export const models: Model[] = [
   },
   {
     name: "Rating",
+    embedded: false
+  },
+  {
+    name: "Offer",
     embedded: false
   }
 ];

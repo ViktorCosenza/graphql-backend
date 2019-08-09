@@ -1,0 +1,9 @@
+type Offer {
+  id: ID! @id
+  offeredBy: User!
+  skill: Skill!
+  tradedIn: [Trade!]!
+  ratedBy: [Rating!]!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}

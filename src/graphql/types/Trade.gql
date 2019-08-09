@@ -1,7 +1,6 @@
 type Trade {
   id: ID!
-  user: User!
-  skill: Skill!
+  offer: Offer!
   other: Trade!
   scheduledFor: String
   createdAt: String!

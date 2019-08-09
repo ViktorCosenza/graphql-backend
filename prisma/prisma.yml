@@ -4,6 +4,8 @@ datamodel:
   - Skill.prisma
   - Trade.prisma
   - Rating.prisma
+  - Offer.prisma
+
 
 generate:
   - generator: javascript-client

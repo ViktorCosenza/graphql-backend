@@ -2,7 +2,7 @@ type User {
   id: ID!
   name: String!
   email: String!
-  ratedIn: [Rating!]!
+  offers: [Offer!]!
   authorOf: [Rating!]!
   createdAt: String!
   updatedAt: String!

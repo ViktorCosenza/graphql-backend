@@ -3,7 +3,11 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateRating {
+/* GraphQL */ `type AggregateOffer {
+  count: Int!
+}
+
+type AggregateRating {
   count: Int!
 }
 
@@ -32,6 +36,11 @@ scalar DateTime
 scalar Long
 
 type Mutation {
+  createOffer(data: OfferCreateInput!): Offer!
+  updateOffer(data: OfferUpdateInput!, where: OfferWhereUniqueInput!): Offer
+  upsertOffer(where: OfferWhereUniqueInput!, create: OfferCreateInput!, update: OfferUpdateInput!): Offer!
+  deleteOffer(where: OfferWhereUniqueInput!): Offer
+  deleteManyOffers(where: OfferWhereInput): BatchPayload!
   createRating(data: RatingCreateInput!): Rating!
   updateRating(data: RatingUpdateInput!, where: RatingWhereUniqueInput!): Rating
   upsertRating(where: RatingWhereUniqueInput!, create: RatingCreateInput!, update: RatingUpdateInput!): Rating!
@@ -73,6 +82,299 @@ interface Node {
   id: ID!
 }
 
+type Offer {
+  id: ID!
+  offeredBy: User!
+  skill: Skill!
+  tradedIn(where: TradeWhereInput, orderBy: TradeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Trade!]
+  ratedBy(where: RatingWhereInput, orderBy: RatingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Rating!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type OfferConnection {
+  pageInfo: PageInfo!
+  edges: [OfferEdge]!
+  aggregate: AggregateOffer!
+}
+
+input OfferCreateInput {
+  id: ID
+  offeredBy: UserCreateOneWithoutOffersInput!
+  skill: SkillCreateOneWithoutOfferedInInput!
+  tradedIn: TradeCreateManyWithoutOfferInput
+  ratedBy: RatingCreateManyWithoutSubjectInput
+}
+
+input OfferCreateManyWithoutOfferedByInput {
+  create: [OfferCreateWithoutOfferedByInput!]
+  connect: [OfferWhereUniqueInput!]
+}
+
+input OfferCreateManyWithoutSkillInput {
+  create: [OfferCreateWithoutSkillInput!]
+  connect: [OfferWhereUniqueInput!]
+}
+
+input OfferCreateOneWithoutRatedByInput {
+  create: OfferCreateWithoutRatedByInput
+  connect: OfferWhereUniqueInput
+}
+
+input OfferCreateOneWithoutTradedInInput {
+  create: OfferCreateWithoutTradedInInput
+  connect: OfferWhereUniqueInput
+}
+
+input OfferCreateWithoutOfferedByInput {
+  id: ID
+  skill: SkillCreateOneWithoutOfferedInInput!
+  tradedIn: TradeCreateManyWithoutOfferInput
+  ratedBy: RatingCreateManyWithoutSubjectInput
+}
+
+input OfferCreateWithoutRatedByInput {
+  id: ID
+  offeredBy: UserCreateOneWithoutOffersInput!
+  skill: SkillCreateOneWithoutOfferedInInput!
+  tradedIn: TradeCreateManyWithoutOfferInput
+}
+
+input OfferCreateWithoutSkillInput {
+  id: ID
+  offeredBy: UserCreateOneWithoutOffersInput!
+  tradedIn: TradeCreateManyWithoutOfferInput
+  ratedBy: RatingCreateManyWithoutSubjectInput
+}
+
+input OfferCreateWithoutTradedInInput {
+  id: ID
+  offeredBy: UserCreateOneWithoutOffersInput!
+  skill: SkillCreateOneWithoutOfferedInInput!
+  ratedBy: RatingCreateManyWithoutSubjectInput
+}
+
+type OfferEdge {
+  node: Offer!
+  cursor: String!
+}
+
+enum OfferOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type OfferPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input OfferScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [OfferScalarWhereInput!]
+  OR: [OfferScalarWhereInput!]
+  NOT: [OfferScalarWhereInput!]
+}
+
+type OfferSubscriptionPayload {
+  mutation: MutationType!
+  node: Offer
+  updatedFields: [String!]
+  previousValues: OfferPreviousValues
+}
+
+input OfferSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: OfferWhereInput
+  AND: [OfferSubscriptionWhereInput!]
+  OR: [OfferSubscriptionWhereInput!]
+  NOT: [OfferSubscriptionWhereInput!]
+}
+
+input OfferUpdateInput {
+  offeredBy: UserUpdateOneRequiredWithoutOffersInput
+  skill: SkillUpdateOneRequiredWithoutOfferedInInput
+  tradedIn: TradeUpdateManyWithoutOfferInput
+  ratedBy: RatingUpdateManyWithoutSubjectInput
+}
+
+input OfferUpdateManyWithoutOfferedByInput {
+  create: [OfferCreateWithoutOfferedByInput!]
+  delete: [OfferWhereUniqueInput!]
+  connect: [OfferWhereUniqueInput!]
+  set: [OfferWhereUniqueInput!]
+  disconnect: [OfferWhereUniqueInput!]
+  update: [OfferUpdateWithWhereUniqueWithoutOfferedByInput!]
+  upsert: [OfferUpsertWithWhereUniqueWithoutOfferedByInput!]
+  deleteMany: [OfferScalarWhereInput!]
+}
+
+input OfferUpdateManyWithoutSkillInput {
+  create: [OfferCreateWithoutSkillInput!]
+  delete: [OfferWhereUniqueInput!]
+  connect: [OfferWhereUniqueInput!]
+  set: [OfferWhereUniqueInput!]
+  disconnect: [OfferWhereUniqueInput!]
+  update: [OfferUpdateWithWhereUniqueWithoutSkillInput!]
+  upsert: [OfferUpsertWithWhereUniqueWithoutSkillInput!]
+  deleteMany: [OfferScalarWhereInput!]
+}
+
+input OfferUpdateOneRequiredWithoutRatedByInput {
+  create: OfferCreateWithoutRatedByInput
+  update: OfferUpdateWithoutRatedByDataInput
+  upsert: OfferUpsertWithoutRatedByInput
+  connect: OfferWhereUniqueInput
+}
+
+input OfferUpdateOneRequiredWithoutTradedInInput {
+  create: OfferCreateWithoutTradedInInput
+  update: OfferUpdateWithoutTradedInDataInput
+  upsert: OfferUpsertWithoutTradedInInput
+  connect: OfferWhereUniqueInput
+}
+
+input OfferUpdateWithoutOfferedByDataInput {
+  skill: SkillUpdateOneRequiredWithoutOfferedInInput
+  tradedIn: TradeUpdateManyWithoutOfferInput
+  ratedBy: RatingUpdateManyWithoutSubjectInput
+}
+
+input OfferUpdateWithoutRatedByDataInput {
+  offeredBy: UserUpdateOneRequiredWithoutOffersInput
+  skill: SkillUpdateOneRequiredWithoutOfferedInInput
+  tradedIn: TradeUpdateManyWithoutOfferInput
+}
+
+input OfferUpdateWithoutSkillDataInput {
+  offeredBy: UserUpdateOneRequiredWithoutOffersInput
+  tradedIn: TradeUpdateManyWithoutOfferInput
+  ratedBy: RatingUpdateManyWithoutSubjectInput
+}
+
+input OfferUpdateWithoutTradedInDataInput {
+  offeredBy: UserUpdateOneRequiredWithoutOffersInput
+  skill: SkillUpdateOneRequiredWithoutOfferedInInput
+  ratedBy: RatingUpdateManyWithoutSubjectInput
+}
+
+input OfferUpdateWithWhereUniqueWithoutOfferedByInput {
+  where: OfferWhereUniqueInput!
+  data: OfferUpdateWithoutOfferedByDataInput!
+}
+
+input OfferUpdateWithWhereUniqueWithoutSkillInput {
+  where: OfferWhereUniqueInput!
+  data: OfferUpdateWithoutSkillDataInput!
+}
+
+input OfferUpsertWithoutRatedByInput {
+  update: OfferUpdateWithoutRatedByDataInput!
+  create: OfferCreateWithoutRatedByInput!
+}
+
+input OfferUpsertWithoutTradedInInput {
+  update: OfferUpdateWithoutTradedInDataInput!
+  create: OfferCreateWithoutTradedInInput!
+}
+
+input OfferUpsertWithWhereUniqueWithoutOfferedByInput {
+  where: OfferWhereUniqueInput!
+  update: OfferUpdateWithoutOfferedByDataInput!
+  create: OfferCreateWithoutOfferedByInput!
+}
+
+input OfferUpsertWithWhereUniqueWithoutSkillInput {
+  where: OfferWhereUniqueInput!
+  update: OfferUpdateWithoutSkillDataInput!
+  create: OfferCreateWithoutSkillInput!
+}
+
+input OfferWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  offeredBy: UserWhereInput
+  skill: SkillWhereInput
+  tradedIn_every: TradeWhereInput
+  tradedIn_some: TradeWhereInput
+  tradedIn_none: TradeWhereInput
+  ratedBy_every: RatingWhereInput
+  ratedBy_some: RatingWhereInput
+  ratedBy_none: RatingWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [OfferWhereInput!]
+  OR: [OfferWhereInput!]
+  NOT: [OfferWhereInput!]
+}
+
+input OfferWhereUniqueInput {
+  id: ID
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -81,6 +383,9 @@ type PageInfo {
 }
 
 type Query {
+  offer(where: OfferWhereUniqueInput!): Offer
+  offers(where: OfferWhereInput, orderBy: OfferOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Offer]!
+  offersConnection(where: OfferWhereInput, orderBy: OfferOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OfferConnection!
   rating(where: RatingWhereUniqueInput!): Rating
   ratings(where: RatingWhereInput, orderBy: RatingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Rating]!
   ratingsConnection(where: RatingWhereInput, orderBy: RatingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RatingConnection!
@@ -102,8 +407,7 @@ type Query {
 type Rating {
   id: ID!
   author: User!
-  subject: User!
-  skill: Skill!
+  subject: Offer!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -117,8 +421,7 @@ type RatingConnection {
 input RatingCreateInput {
   id: ID
   author: UserCreateOneWithoutAuthorOfInput!
-  subject: UserCreateOneWithoutRatedInInput!
-  skill: SkillCreateOneInput!
+  subject: OfferCreateOneWithoutRatedByInput!
 }
 
 input RatingCreateManyWithoutAuthorInput {
@@ -133,14 +436,12 @@ input RatingCreateManyWithoutSubjectInput {
 
 input RatingCreateWithoutAuthorInput {
   id: ID
-  subject: UserCreateOneWithoutRatedInInput!
-  skill: SkillCreateOneInput!
+  subject: OfferCreateOneWithoutRatedByInput!
 }
 
 input RatingCreateWithoutSubjectInput {
   id: ID
   author: UserCreateOneWithoutAuthorOfInput!
-  skill: SkillCreateOneInput!
 }
 
 type RatingEdge {
@@ -219,8 +520,7 @@ input RatingSubscriptionWhereInput {
 
 input RatingUpdateInput {
   author: UserUpdateOneRequiredWithoutAuthorOfInput
-  subject: UserUpdateOneRequiredWithoutRatedInInput
-  skill: SkillUpdateOneRequiredInput
+  subject: OfferUpdateOneRequiredWithoutRatedByInput
 }
 
 input RatingUpdateManyWithoutAuthorInput {
@@ -246,13 +546,11 @@ input RatingUpdateManyWithoutSubjectInput {
 }
 
 input RatingUpdateWithoutAuthorDataInput {
-  subject: UserUpdateOneRequiredWithoutRatedInInput
-  skill: SkillUpdateOneRequiredInput
+  subject: OfferUpdateOneRequiredWithoutRatedByInput
 }
 
 input RatingUpdateWithoutSubjectDataInput {
   author: UserUpdateOneRequiredWithoutAuthorOfInput
-  skill: SkillUpdateOneRequiredInput
 }
 
 input RatingUpdateWithWhereUniqueWithoutAuthorInput {
@@ -293,8 +591,7 @@ input RatingWhereInput {
   id_ends_with: ID
   id_not_ends_with: ID
   author: UserWhereInput
-  subject: UserWhereInput
-  skill: SkillWhereInput
+  subject: OfferWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -325,8 +622,7 @@ type Skill {
   name: String!
   description: String!
   type: SkillType!
-  tradedIn(where: TradeWhereInput, orderBy: TradeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Trade!]
-  ratedIn(where: SkillWhereInput, orderBy: SkillOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Skill!]
+  offeredIn(where: OfferWhereInput, orderBy: OfferOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Offer!]
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -342,13 +638,7 @@ input SkillCreateInput {
   name: String!
   description: String!
   type: SkillTypeCreateOneWithoutContainsInput!
-  tradedIn: TradeCreateManyWithoutSkillInput
-  ratedIn: SkillCreateManyInput
-}
-
-input SkillCreateManyInput {
-  create: [SkillCreateInput!]
-  connect: [SkillWhereUniqueInput!]
+  offeredIn: OfferCreateManyWithoutSkillInput
 }
 
 input SkillCreateManyWithoutTypeInput {
@@ -356,30 +646,23 @@ input SkillCreateManyWithoutTypeInput {
   connect: [SkillWhereUniqueInput!]
 }
 
-input SkillCreateOneInput {
-  create: SkillCreateInput
+input SkillCreateOneWithoutOfferedInInput {
+  create: SkillCreateWithoutOfferedInInput
   connect: SkillWhereUniqueInput
 }
 
-input SkillCreateOneWithoutTradedInInput {
-  create: SkillCreateWithoutTradedInInput
-  connect: SkillWhereUniqueInput
-}
-
-input SkillCreateWithoutTradedInInput {
+input SkillCreateWithoutOfferedInInput {
   id: ID
   name: String!
   description: String!
   type: SkillTypeCreateOneWithoutContainsInput!
-  ratedIn: SkillCreateManyInput
 }
 
 input SkillCreateWithoutTypeInput {
   id: ID
   name: String!
   description: String!
-  tradedIn: TradeCreateManyWithoutSkillInput
-  ratedIn: SkillCreateManyInput
+  offeredIn: OfferCreateManyWithoutSkillInput
 }
 
 type SkillEdge {
@@ -666,37 +949,16 @@ input SkillTypeWhereUniqueInput {
   id: ID
 }
 
-input SkillUpdateDataInput {
-  name: String
-  description: String
-  type: SkillTypeUpdateOneRequiredWithoutContainsInput
-  tradedIn: TradeUpdateManyWithoutSkillInput
-  ratedIn: SkillUpdateManyInput
-}
-
 input SkillUpdateInput {
   name: String
   description: String
   type: SkillTypeUpdateOneRequiredWithoutContainsInput
-  tradedIn: TradeUpdateManyWithoutSkillInput
-  ratedIn: SkillUpdateManyInput
+  offeredIn: OfferUpdateManyWithoutSkillInput
 }
 
 input SkillUpdateManyDataInput {
   name: String
   description: String
-}
-
-input SkillUpdateManyInput {
-  create: [SkillCreateInput!]
-  update: [SkillUpdateWithWhereUniqueNestedInput!]
-  upsert: [SkillUpsertWithWhereUniqueNestedInput!]
-  delete: [SkillWhereUniqueInput!]
-  connect: [SkillWhereUniqueInput!]
-  set: [SkillWhereUniqueInput!]
-  disconnect: [SkillWhereUniqueInput!]
-  deleteMany: [SkillScalarWhereInput!]
-  updateMany: [SkillUpdateManyWithWhereNestedInput!]
 }
 
 input SkillUpdateManyMutationInput {
@@ -721,37 +983,23 @@ input SkillUpdateManyWithWhereNestedInput {
   data: SkillUpdateManyDataInput!
 }
 
-input SkillUpdateOneRequiredInput {
-  create: SkillCreateInput
-  update: SkillUpdateDataInput
-  upsert: SkillUpsertNestedInput
+input SkillUpdateOneRequiredWithoutOfferedInInput {
+  create: SkillCreateWithoutOfferedInInput
+  update: SkillUpdateWithoutOfferedInDataInput
+  upsert: SkillUpsertWithoutOfferedInInput
   connect: SkillWhereUniqueInput
 }
 
-input SkillUpdateOneRequiredWithoutTradedInInput {
-  create: SkillCreateWithoutTradedInInput
-  update: SkillUpdateWithoutTradedInDataInput
-  upsert: SkillUpsertWithoutTradedInInput
-  connect: SkillWhereUniqueInput
-}
-
-input SkillUpdateWithoutTradedInDataInput {
+input SkillUpdateWithoutOfferedInDataInput {
   name: String
   description: String
   type: SkillTypeUpdateOneRequiredWithoutContainsInput
-  ratedIn: SkillUpdateManyInput
 }
 
 input SkillUpdateWithoutTypeDataInput {
   name: String
   description: String
-  tradedIn: TradeUpdateManyWithoutSkillInput
-  ratedIn: SkillUpdateManyInput
-}
-
-input SkillUpdateWithWhereUniqueNestedInput {
-  where: SkillWhereUniqueInput!
-  data: SkillUpdateDataInput!
+  offeredIn: OfferUpdateManyWithoutSkillInput
 }
 
 input SkillUpdateWithWhereUniqueWithoutTypeInput {
@@ -759,20 +1007,9 @@ input SkillUpdateWithWhereUniqueWithoutTypeInput {
   data: SkillUpdateWithoutTypeDataInput!
 }
 
-input SkillUpsertNestedInput {
-  update: SkillUpdateDataInput!
-  create: SkillCreateInput!
-}
-
-input SkillUpsertWithoutTradedInInput {
-  update: SkillUpdateWithoutTradedInDataInput!
-  create: SkillCreateWithoutTradedInInput!
-}
-
-input SkillUpsertWithWhereUniqueNestedInput {
-  where: SkillWhereUniqueInput!
-  update: SkillUpdateDataInput!
-  create: SkillCreateInput!
+input SkillUpsertWithoutOfferedInInput {
+  update: SkillUpdateWithoutOfferedInDataInput!
+  create: SkillCreateWithoutOfferedInInput!
 }
 
 input SkillUpsertWithWhereUniqueWithoutTypeInput {
@@ -825,12 +1062,9 @@ input SkillWhereInput {
   description_ends_with: String
   description_not_ends_with: String
   type: SkillTypeWhereInput
-  tradedIn_every: TradeWhereInput
-  tradedIn_some: TradeWhereInput
-  tradedIn_none: TradeWhereInput
-  ratedIn_every: SkillWhereInput
-  ratedIn_some: SkillWhereInput
-  ratedIn_none: SkillWhereInput
+  offeredIn_every: OfferWhereInput
+  offeredIn_some: OfferWhereInput
+  offeredIn_none: OfferWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -857,6 +1091,7 @@ input SkillWhereUniqueInput {
 }
 
 type Subscription {
+  offer(where: OfferSubscriptionWhereInput): OfferSubscriptionPayload
   rating(where: RatingSubscriptionWhereInput): RatingSubscriptionPayload
   skill(where: SkillSubscriptionWhereInput): SkillSubscriptionPayload
   skillType(where: SkillTypeSubscriptionWhereInput): SkillTypeSubscriptionPayload
@@ -866,8 +1101,7 @@ type Subscription {
 
 type Trade {
   id: ID!
-  user: User!
-  skill: Skill!
+  offer: Offer!
   other: Trade
   scheduledFor: DateTime
   createdAt: DateTime!
@@ -882,14 +1116,13 @@ type TradeConnection {
 
 input TradeCreateInput {
   id: ID
-  user: UserCreateOneInput!
-  skill: SkillCreateOneWithoutTradedInInput!
+  offer: OfferCreateOneWithoutTradedInInput!
   other: TradeCreateOneInput
   scheduledFor: DateTime
 }
 
-input TradeCreateManyWithoutSkillInput {
-  create: [TradeCreateWithoutSkillInput!]
+input TradeCreateManyWithoutOfferInput {
+  create: [TradeCreateWithoutOfferInput!]
   connect: [TradeWhereUniqueInput!]
 }
 
@@ -898,9 +1131,8 @@ input TradeCreateOneInput {
   connect: TradeWhereUniqueInput
 }
 
-input TradeCreateWithoutSkillInput {
+input TradeCreateWithoutOfferInput {
   id: ID
-  user: UserCreateOneInput!
   other: TradeCreateOneInput
   scheduledFor: DateTime
 }
@@ -991,15 +1223,13 @@ input TradeSubscriptionWhereInput {
 }
 
 input TradeUpdateDataInput {
-  user: UserUpdateOneRequiredInput
-  skill: SkillUpdateOneRequiredWithoutTradedInInput
+  offer: OfferUpdateOneRequiredWithoutTradedInInput
   other: TradeUpdateOneInput
   scheduledFor: DateTime
 }
 
 input TradeUpdateInput {
-  user: UserUpdateOneRequiredInput
-  skill: SkillUpdateOneRequiredWithoutTradedInInput
+  offer: OfferUpdateOneRequiredWithoutTradedInInput
   other: TradeUpdateOneInput
   scheduledFor: DateTime
 }
@@ -1012,14 +1242,14 @@ input TradeUpdateManyMutationInput {
   scheduledFor: DateTime
 }
 
-input TradeUpdateManyWithoutSkillInput {
-  create: [TradeCreateWithoutSkillInput!]
+input TradeUpdateManyWithoutOfferInput {
+  create: [TradeCreateWithoutOfferInput!]
   delete: [TradeWhereUniqueInput!]
   connect: [TradeWhereUniqueInput!]
   set: [TradeWhereUniqueInput!]
   disconnect: [TradeWhereUniqueInput!]
-  update: [TradeUpdateWithWhereUniqueWithoutSkillInput!]
-  upsert: [TradeUpsertWithWhereUniqueWithoutSkillInput!]
+  update: [TradeUpdateWithWhereUniqueWithoutOfferInput!]
+  upsert: [TradeUpsertWithWhereUniqueWithoutOfferInput!]
   deleteMany: [TradeScalarWhereInput!]
   updateMany: [TradeUpdateManyWithWhereNestedInput!]
 }
@@ -1038,15 +1268,14 @@ input TradeUpdateOneInput {
   connect: TradeWhereUniqueInput
 }
 
-input TradeUpdateWithoutSkillDataInput {
-  user: UserUpdateOneRequiredInput
+input TradeUpdateWithoutOfferDataInput {
   other: TradeUpdateOneInput
   scheduledFor: DateTime
 }
 
-input TradeUpdateWithWhereUniqueWithoutSkillInput {
+input TradeUpdateWithWhereUniqueWithoutOfferInput {
   where: TradeWhereUniqueInput!
-  data: TradeUpdateWithoutSkillDataInput!
+  data: TradeUpdateWithoutOfferDataInput!
 }
 
 input TradeUpsertNestedInput {
@@ -1054,10 +1283,10 @@ input TradeUpsertNestedInput {
   create: TradeCreateInput!
 }
 
-input TradeUpsertWithWhereUniqueWithoutSkillInput {
+input TradeUpsertWithWhereUniqueWithoutOfferInput {
   where: TradeWhereUniqueInput!
-  update: TradeUpdateWithoutSkillDataInput!
-  create: TradeCreateWithoutSkillInput!
+  update: TradeUpdateWithoutOfferDataInput!
+  create: TradeCreateWithoutOfferInput!
 }
 
 input TradeWhereInput {
@@ -1075,8 +1304,7 @@ input TradeWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  user: UserWhereInput
-  skill: SkillWhereInput
+  offer: OfferWhereInput
   other: TradeWhereInput
   scheduledFor: DateTime
   scheduledFor_not: DateTime
@@ -1116,7 +1344,7 @@ type User {
   name: String!
   email: String!
   password: String!
-  ratedIn(where: RatingWhereInput, orderBy: RatingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Rating!]
+  offers(where: OfferWhereInput, orderBy: OfferOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Offer!]
   authorOf(where: RatingWhereInput, orderBy: RatingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Rating!]
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -1133,13 +1361,8 @@ input UserCreateInput {
   name: String!
   email: String!
   password: String!
-  ratedIn: RatingCreateManyWithoutSubjectInput
+  offers: OfferCreateManyWithoutOfferedByInput
   authorOf: RatingCreateManyWithoutAuthorInput
-}
-
-input UserCreateOneInput {
-  create: UserCreateInput
-  connect: UserWhereUniqueInput
 }
 
 input UserCreateOneWithoutAuthorOfInput {
@@ -1147,8 +1370,8 @@ input UserCreateOneWithoutAuthorOfInput {
   connect: UserWhereUniqueInput
 }
 
-input UserCreateOneWithoutRatedInInput {
-  create: UserCreateWithoutRatedInInput
+input UserCreateOneWithoutOffersInput {
+  create: UserCreateWithoutOffersInput
   connect: UserWhereUniqueInput
 }
 
@@ -1157,10 +1380,10 @@ input UserCreateWithoutAuthorOfInput {
   name: String!
   email: String!
   password: String!
-  ratedIn: RatingCreateManyWithoutSubjectInput
+  offers: OfferCreateManyWithoutOfferedByInput
 }
 
-input UserCreateWithoutRatedInInput {
+input UserCreateWithoutOffersInput {
   id: ID
   name: String!
   email: String!
@@ -1215,19 +1438,11 @@ input UserSubscriptionWhereInput {
   NOT: [UserSubscriptionWhereInput!]
 }
 
-input UserUpdateDataInput {
-  name: String
-  email: String
-  password: String
-  ratedIn: RatingUpdateManyWithoutSubjectInput
-  authorOf: RatingUpdateManyWithoutAuthorInput
-}
-
 input UserUpdateInput {
   name: String
   email: String
   password: String
-  ratedIn: RatingUpdateManyWithoutSubjectInput
+  offers: OfferUpdateManyWithoutOfferedByInput
   authorOf: RatingUpdateManyWithoutAuthorInput
 }
 
@@ -1237,13 +1452,6 @@ input UserUpdateManyMutationInput {
   password: String
 }
 
-input UserUpdateOneRequiredInput {
-  create: UserCreateInput
-  update: UserUpdateDataInput
-  upsert: UserUpsertNestedInput
-  connect: UserWhereUniqueInput
-}
-
 input UserUpdateOneRequiredWithoutAuthorOfInput {
   create: UserCreateWithoutAuthorOfInput
   update: UserUpdateWithoutAuthorOfDataInput
@@ -1251,10 +1459,10 @@ input UserUpdateOneRequiredWithoutAuthorOfInput {
   connect: UserWhereUniqueInput
 }
 
-input UserUpdateOneRequiredWithoutRatedInInput {
-  create: UserCreateWithoutRatedInInput
-  update: UserUpdateWithoutRatedInDataInput
-  upsert: UserUpsertWithoutRatedInInput
+input UserUpdateOneRequiredWithoutOffersInput {
+  create: UserCreateWithoutOffersInput
+  update: UserUpdateWithoutOffersDataInput
+  upsert: UserUpsertWithoutOffersInput
   connect: UserWhereUniqueInput
 }
 
@@ -1262,19 +1470,14 @@ input UserUpdateWithoutAuthorOfDataInput {
   name: String
   email: String
   password: String
-  ratedIn: RatingUpdateManyWithoutSubjectInput
+  offers: OfferUpdateManyWithoutOfferedByInput
 }
 
-input UserUpdateWithoutRatedInDataInput {
+input UserUpdateWithoutOffersDataInput {
   name: String
   email: String
   password: String
   authorOf: RatingUpdateManyWithoutAuthorInput
-}
-
-input UserUpsertNestedInput {
-  update: UserUpdateDataInput!
-  create: UserCreateInput!
 }
 
 input UserUpsertWithoutAuthorOfInput {
@@ -1282,9 +1485,9 @@ input UserUpsertWithoutAuthorOfInput {
   create: UserCreateWithoutAuthorOfInput!
 }
 
-input UserUpsertWithoutRatedInInput {
-  update: UserUpdateWithoutRatedInDataInput!
-  create: UserCreateWithoutRatedInInput!
+input UserUpsertWithoutOffersInput {
+  update: UserUpdateWithoutOffersDataInput!
+  create: UserCreateWithoutOffersInput!
 }
 
 input UserWhereInput {
@@ -1344,9 +1547,9 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
-  ratedIn_every: RatingWhereInput
-  ratedIn_some: RatingWhereInput
-  ratedIn_none: RatingWhereInput
+  offers_every: OfferWhereInput
+  offers_some: OfferWhereInput
+  offers_none: OfferWhereInput
   authorOf_every: RatingWhereInput
   authorOf_some: RatingWhereInput
   authorOf_none: RatingWhereInput

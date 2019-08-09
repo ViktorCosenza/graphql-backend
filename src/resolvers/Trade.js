@@ -1,11 +1,6 @@
-const user = async (parent, args, ctx) => {
-  const user = await ctx.prisma.trades({ id: parent.id }).user()
-  return user
-}
-
-const skill = async (parent, args, ctx) => {
-  const skill = await ctx.prisma.trades({ id: parent.id }).skill()
-  return skill
+const offer = async (parent, args, ctx) => {
+  const offer = await ctx.prisma.trades({ id: parent.id }).offer()
+  return offer
 }
 
 const other = async (parent, args, ctx) => {
@@ -14,7 +9,6 @@ const other = async (parent, args, ctx) => {
 }
 
 export default {
-  user,
-  skill,
+  offer,
   other
 }

@@ -1,7 +1,6 @@
 type Trade {
   id: ID! @id
-  user: User!
-  skill: Skill!
+  offer: Offer!
   other: Trade
   scheduledFor: DateTime
   createdAt: DateTime! @createdAt

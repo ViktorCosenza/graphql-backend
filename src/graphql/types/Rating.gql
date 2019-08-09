@@ -1,7 +1,7 @@
 type Rating {
   id: ID!
   author: User!
-  subject: User!
+  subject: Offer!
   skill: Skill!
   createdAt: String!
   updatedAt: String!

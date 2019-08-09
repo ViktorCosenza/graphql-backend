@@ -10,8 +10,9 @@ type Skill {
   name: String!
   description: String!
   type: SkillType!
-  tradedIn: [Trade!]!
+  offeredIn: [Offer!]!
   createdAt: String!
+  updatedAt: String!
 }
 
 input SkillTypeInput {
