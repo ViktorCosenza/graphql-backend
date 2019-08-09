@@ -3,12 +3,14 @@ import * as Yup from 'yup'
 const createSkillType = {
   validationSchema: Yup.object().shape({
     input: Yup.object().shape({
+      name: Yup.string(),
       description: Yup.string()
     })
   }),
-  resolve: () => {
-    console.log('heheheh')
-    return 'a'
+  resolve: (root, args, ctx, info) => {
+    const input = { args }
+    const skillType = ctx.prisma.createSkillType({ ...input })
+    return skillType
   }
 }
 
