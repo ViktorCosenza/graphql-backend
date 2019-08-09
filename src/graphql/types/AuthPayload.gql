@@ -4,7 +4,18 @@ type AuthPayload {
   error: MutationValidationError
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input SignUpInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
 type Mutation {
-  signup(email: String!, password: String!, name: String!): AuthPayload
-  login(email: String!, password: String!): AuthPayload
+  signup(input: SignUpInput!): AuthPayload
+  login(input: LoginInput!): AuthPayload
 }

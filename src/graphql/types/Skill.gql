@@ -12,7 +12,21 @@ type Skill {
   createdAt: String!
 }
 
+input SkillTypeInput {
+  description: String!
+}
+
+input SkillInput {
+  description: String!
+  type: ID!
+}
+
 type Query {
-  skill(description: String!, skip: Int, first: Int): [Skill!]!
+  skill(description: String!, page: PageInfo!): [Skill!]!
   skillType(id: ID!): SkillType
+}
+
+type Mutation {
+  createSkillType(input: SkillTypeInput!): SkillType!
+  createSkill(input: SkillInput!): Skill!
 }

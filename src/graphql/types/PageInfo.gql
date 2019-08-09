@@ -1,0 +1,5 @@
+input PageInfo {
+  startOffset: Int
+  endOffset: Int
+  length: Int
+}
